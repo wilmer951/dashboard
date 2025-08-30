@@ -1,4 +1,4 @@
-import endpoints from "../api/endpoints";
+import endpoints from "@/services/api/endpoints";
 
 // authService.js
 export function getToken() {
@@ -14,7 +14,7 @@ export async function isTokenValid() {
   if (!token) return false;
 
   try {
-    const response = await fetch(endpoints.checkAuth, {
+    const response = await fetch(endpoints.base+'apicheck-auth.php', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -52,7 +52,7 @@ export async function login(usuario, password) {
   const loginData = { usuario, password };
 
   try {
-    const response = await fetch(endpoints.login, {
+    const response = await fetch(endpoints.base+'api_login.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

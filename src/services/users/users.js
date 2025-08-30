@@ -1,10 +1,10 @@
-import endpoints from "../api/endpoints";
-import { getToken } from "../auth/authService";
+import endpoints from "@/services/api/endpoints";
+import { getToken } from "@/services/auth/authService";
 
 export async function listusers() {
   const token = getToken();
   
-  const response = await fetch(endpoints.listusers, {
+  const response = await fetch(endpoints.base+'api_usuarios.php', {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`

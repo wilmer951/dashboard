@@ -4,6 +4,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './', 
   plugins: [vue()],
   resolve: {
     alias: {
@@ -17,6 +18,8 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '') // quita /api al reenviar
       }
-    }
+    },
+
+    
   }
 })

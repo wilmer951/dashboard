@@ -246,7 +246,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import UserModal from '../../components/users/UserModal.vue';
+import UserModal from '@/components/users/UserModal.vue';
 import { listusers } from '@/services/users/users.js';
 
 // Estado reactivo

@@ -23,7 +23,7 @@
 <script setup>
 
 import { computed } from 'vue'
-import Modal from '../common/Modal.vue'
+import Modal from '@/components/common/Modal.vue'
 
 const props = defineProps({
   visible: Boolean,

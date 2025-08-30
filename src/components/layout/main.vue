@@ -74,7 +74,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { logout as doLogout } from '../../services/auth/authService';
+import { logout as doLogout } from '@/services/auth/authService';
 
 const router = useRouter();
 const isSidebarOpen = ref(false);
