@@ -8,7 +8,7 @@
       </h1>
       <button
         class="mt-4 md:mt-0 flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        @click="mostrarModal = true"
+        @click="abrirModal('create')"
       >
         <svg
           class="h-5 w-5 mr-2"
@@ -131,11 +131,13 @@
                 <div class="flex items-center justify-end space-x-4">
                   <button
                     class="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    @click="abrirModal('edit')"
                   >
                     Editar
                   </button>
                   <button
                     class="rounded-md bg-amber-500 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                    @click="abrirModal('reset')"
                   >
                     Rest. contraseña
                   </button>
@@ -230,15 +232,21 @@
   </div>
 
   <!-- Modal -->
-  <Modal :visible="mostrarModal" title="Crear Usuario" @close="mostrarModal = false">
-    <p>Contenido del modal aquí (formulario, etc.).</p>
-  </Modal>
+
+    <UserModal 
+      :visible="mostrarModal" 
+      :mode="modalMode" 
+      :user="usuarioSeleccionado"
+      @close="cerrarModal"
+  />
+        
+
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import Modal from '@/components/common/Modal.vue';
+import UserModal from '../../components/users/UserModal.vue';
 import { listusers } from '@/services/users/users.js';
 
 // Estado reactivo
@@ -246,8 +254,28 @@ const mostrarModal = ref(false);
 const users = ref([]);
 const loading = ref(true);
 const error = ref(null);
+const usuarioSeleccionado = ref(null);
+const modalMode = ref("create");
+
+
+function abrirModal(mode, user = null) {
+  modalMode.value = mode
+  usuarioSeleccionado.value = user
+  mostrarModal.value = true
+}
+
+function cerrarModal() {
+  mostrarModal.value = false
+}
+
 
 const cargarUsuarios = async () => {
+
+
+
+
+
+
   error.value = null;
   loading.value = true;
   try {
