@@ -1,5 +1,7 @@
 import endpoints from "@/services/api/endpoints";
 import { getToken } from "@/services/auth/authService";
+console.log("SERVICIO USERS CARGADO ✅");
+
 
 export async function listusers() {
   const token = getToken();
@@ -24,4 +26,23 @@ if (!response.ok) throw new Error('Error al obtener los usuarios');
     estado
   }));
 
+}
+
+
+
+export async function createUser(userData) {
+  const token = getToken();
+
+  const response = await fetch(endpoints.base + "api_usuarios.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (!response.ok) throw new Error("Error al crear usuario");
+
+  return await response.json();
 }

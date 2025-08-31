@@ -14,7 +14,7 @@ export async function isTokenValid() {
   if (!token) return false;
 
   try {
-    const response = await fetch(endpoints.base+'apicheck-auth.php', {
+    const response = await fetch(endpoints.base+'api_check-auth.php', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,

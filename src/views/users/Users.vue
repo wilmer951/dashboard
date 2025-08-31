@@ -237,7 +237,11 @@
       :visible="mostrarModal" 
       :mode="modalMode" 
       :user="usuarioSeleccionado"
+      :error="error"
+      :success="success"
       @close="cerrarModal"
+      @save="guardarUsuario"
+      
   />
         
 
@@ -247,13 +251,19 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import UserModal from '@/components/users/UserModal.vue';
-import { listusers } from '@/services/users/users.js';
+import { listusers, createUser } from '@/services/users/users.js';
+
+
+
+
 
 // Estado reactivo
 const mostrarModal = ref(false);
 const users = ref([]);
 const loading = ref(true);
 const error = ref(null);
+const success = ref(null);
+
 const usuarioSeleccionado = ref(null);
 const modalMode = ref("create");
 
@@ -264,17 +274,19 @@ function abrirModal(mode, user = null) {
   mostrarModal.value = true
 }
 
-function cerrarModal() {
+
+
+
+const cerrarModal = () => {
+  // 🔑 Al cerrar, resetea todos los estados relacionados
   mostrarModal.value = false
+  error.value = ""
+  success.value = ""
+  modalMode.value = "create"
 }
 
 
 const cargarUsuarios = async () => {
-
-
-
-
-
 
   error.value = null;
   loading.value = true;
@@ -288,5 +300,46 @@ const cargarUsuarios = async () => {
   }
 };
 
+
+
+
+const guardarUsuario = async (data) => {
+  try {
+    console.log("➡️ Datos recibidos del form:", data);
+    const response = await createUser(data); // 🚀 Aquí llamas al servicio
+    console.log("➡️ Respuesta del servicio:", response)
+
+
+  if (response.status !== "ok") {
+      console.log("Lo sentimo paso algo en la creación.")
+
+      error.value = response.mensaje;
+
+        return;
+    };  
+
+     success.value = response.mensaje;
+
+
+    await cargarUsuarios(); // refresca la lista
+
+
+           // ⏳ esperar 3 segundos antes de cerrar modal
+    setTimeout(() => {
+      mostrarModal.value = false;
+    }, 3000);
+
+  } catch (error) {
+    console.error("Error guardando usuario:", error);
+  }
+  
+  
+};
+
+
 onMounted(cargarUsuarios);
-</script>
+</script>   
+
+
+
+
