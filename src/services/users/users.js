@@ -17,13 +17,15 @@ if (!response.ok) throw new Error('Error al obtener los usuarios');
 
   const data = await response.json();
 
-  return data.map(({ id, usuario, nombres, nom_rol, ult_login, estado }) => ({
+  return data.map(({ id, usuario, nombres, nom_rol, ult_login, estado,id_rol,id_perfil }) => ({
     id,
     username: usuario,
     name: nombres,
     role: nom_rol,
     lastLogin: ult_login,
-    estado
+    estado,
+    id_rol:id_rol,
+    id_perfil:id_perfil
   }));
 
 }

@@ -271,10 +271,16 @@ const modalMode = ref("create");
 
 function abrirModal(mode, user = null) {
   
-   console.log("abrir")
+     const userForModal = { ...user }; 
+
+  // Check if the user and the role exist before attempting to split
+  if (userForModal && userForModal.id_rol) {
+    // Split the comma-separated string into an array
+    userForModal.role = userForModal.id_rol.split(',');
+  }
    
   modalMode.value = mode
-  usuarioSeleccionado.value = user;
+  usuarioSeleccionado.value = userForModal;
   mostrarModal.value = true
 }
 
@@ -283,7 +289,7 @@ function abrirModal(mode, user = null) {
 
 const cerrarModal = () => {
   // 🔑 Al cerrar, resetea todos los estados relacionados
-  console.log("cerrar")
+  
   mostrarModal.value = false
   error.value = ""
   success.value = ""

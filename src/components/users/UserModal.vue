@@ -19,7 +19,9 @@
 
     <div v-if="mode === 'create' || mode === 'edit'">
       <UsersForm 
+      :datauser="props.selectedUser"
       :mode="mode"
+
       @submit="handleSubmit"/>
     </div>
 
@@ -50,10 +52,14 @@ const props = defineProps({
   mode: String, // create | edit | reset
   error: String,
   success: String,
+  selectedUser:Object
+
   
   
 })
- console.log(props)
+
+
+ 
 
 const emit = defineEmits(["close", "save"]); // 👈 re-emite el save al padre
 

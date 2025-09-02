@@ -107,6 +107,15 @@
 <script setup>
 import { watch,reactive } from "vue";
 
+const props = defineProps({
+  mode: String, // create | edit | reset
+  datauser:Object
+
+  
+  
+})
+
+console.log(props.datauser);
 
 
 const emit = defineEmits(["submit"]);
@@ -118,6 +127,32 @@ const form = reactive({
   perfil: "",
   rol: [],
 });
+
+
+
+// 👇 Observa cuando cambien el modo o el datauser
+watch(
+  () => [props.mode, props.datauser],
+  ([mode, user]) => {
+    if (mode === "edit" && user) {
+      form.usuario = user.username || "";
+      form.nombres = user.name || "";
+      form.password = ""; // normalmente no se precarga
+      form.perfil = user.id_perfil || "";
+      form.rol = user.role ? [...user.role] : [];
+    } else if (mode === "create") {
+      // limpiar formulario en modo crear
+      form.usuario = "";
+      form.nombres = "";
+      form.password = "";
+      form.perfil = "";
+      form.rol = [];
+    }
+  },
+  { immediate: true } // ejecuta también al montar el componente
+);
+
+
 
 const submitForm = () => {
   emit("submit", { ...form }); // directo como objeto
