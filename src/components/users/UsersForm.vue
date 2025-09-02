@@ -105,7 +105,7 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { watch,reactive } from "vue";
 
 
 
@@ -122,6 +122,7 @@ const form = reactive({
 const submitForm = () => {
   emit("submit", { ...form }); // directo como objeto
 };
+
 
 
 </script>

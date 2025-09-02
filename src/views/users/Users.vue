@@ -8,7 +8,7 @@
       </h1>
       <button
         class="mt-4 md:mt-0 flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        @click="abrirModal('create')"
+        @click.prevent="abrirModal('create')"
       >
         <svg
           class="h-5 w-5 mr-2"
@@ -131,7 +131,7 @@
                 <div class="flex items-center justify-end space-x-4">
                   <button
                     class="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    @click="abrirModal('edit')"
+                    @click="abrirModal('edit',user)"
                   >
                     Editar
                   </button>
@@ -234,9 +234,10 @@
   <!-- Modal -->
 
     <UserModal 
+      v-if="mostrarModal"
       :visible="mostrarModal" 
       :mode="modalMode" 
-      :user="usuarioSeleccionado"
+      :selectedUser="usuarioSeleccionado"
       :error="error"
       :success="success"
       @close="cerrarModal"
@@ -269,8 +270,11 @@ const modalMode = ref("create");
 
 
 function abrirModal(mode, user = null) {
+  
+   console.log("abrir")
+   
   modalMode.value = mode
-  usuarioSeleccionado.value = user
+  usuarioSeleccionado.value = user;
   mostrarModal.value = true
 }
 
@@ -279,10 +283,12 @@ function abrirModal(mode, user = null) {
 
 const cerrarModal = () => {
   // 🔑 Al cerrar, resetea todos los estados relacionados
+  console.log("cerrar")
   mostrarModal.value = false
   error.value = ""
   success.value = ""
   modalMode.value = "create"
+  usuarioSeleccionado.value = null;
 }
 
 
@@ -337,9 +343,9 @@ const guardarUsuario = async (data) => {
 };
 
 
+
+
+
+
 onMounted(cargarUsuarios);
 </script>   
-
-
-
-

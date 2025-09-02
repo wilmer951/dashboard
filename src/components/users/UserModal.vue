@@ -17,12 +17,12 @@
       </div>
     </template>
 
-    <div v-if="mode === 'create'">
-      <UsersForm @submit="handleSubmit"/>
+    <div v-if="mode === 'create' || mode === 'edit'">
+      <UsersForm 
+      :mode="mode"
+      @submit="handleSubmit"/>
     </div>
 
-    <div v-else-if="mode === 'edit'">
-      </div>
 
     <div v-else-if="mode === 'reset'">
       <button class="bg-yellow-500 text-white px-3 py-1 rounded">Confirmar Reset</button>
@@ -40,19 +40,20 @@
 
 <script setup>
 
-import { computed } from 'vue'
+import { computed,watch } from 'vue'
 import Modal from '@/components/common/Modal.vue'
 import UsersForm from '@/components/users/UsersForm.vue'
 
- 
+
 
 const props = defineProps({
   mode: String, // create | edit | reset
   error: String,
-  success: String
+  success: String,
+  
   
 })
-
+ console.log(props)
 
 const emit = defineEmits(["close", "save"]); // 👈 re-emite el save al padre
 
