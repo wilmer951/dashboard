@@ -17,19 +17,15 @@
       </div>
     </template>
 
-    <div v-if="mode === 'create' || mode === 'edit'">
+    
       <UsersForm 
       :datauser="props.selectedUser"
       :mode="mode"
-
       @submit="handleSubmit"/>
-    </div>
+    
 
 
-    <div v-else-if="mode === 'reset'">
-      <button class="bg-yellow-500 text-white px-3 py-1 rounded">Confirmar Reset</button>
-    </div>
-
+  
     <div v-if="error" class="mt-3 p-2 bg-red-100 text-red-700 rounded">
       ⚠️ {{ error }}
     </div>

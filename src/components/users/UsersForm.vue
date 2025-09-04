@@ -2,7 +2,7 @@
   <div class="max-w-xl mx-auto p-8 bg-white rounded-3xl shadow-2xl">
 
     <form @submit.prevent="submitForm" class="space-y-6">
-      <div class="relative">
+      <div v-if="mode === 'create' || mode === 'edit'" class="relative">
         <input
           v-model="form.usuario"
           type="text"
@@ -19,7 +19,7 @@
         </label>
       </div>
 
-      <div class="relative">
+      <div v-if="mode === 'create' || mode === 'edit'" class="relative">
         <input
           v-model="form.nombres"
           type="text"
@@ -36,7 +36,7 @@
         </label>
       </div>
 
-      <div class="relative">
+      <div v-if="mode === 'create' || mode === 'reset'" class="relative" >
         <input
           v-model="form.password"
           type="password"
@@ -53,7 +53,7 @@
         </label>
       </div>
 
-      <div class="relative">
+      <div v-if="mode === 'create' || mode === 'edit'" class="relative">
         <select
           v-model.number="form.perfil"
           id="perfil"
@@ -76,7 +76,7 @@
         </div>
       </div>
 
-      <div>
+      <div v-if="mode === 'create' || mode === 'edit'">
         <label class="block text-sm font-semibold text-gray-700 mb-1">Roles</label>
         <select
           v-model="form.rol"
@@ -105,18 +105,12 @@
 </template>
 
 <script setup>
-import { watch,reactive } from "vue";
+import { watch, reactive } from "vue";
 
 const props = defineProps({
   mode: String, // create | edit | reset
-  datauser:Object
-
-  
-  
-})
-
-console.log(props.datauser);
-
+  datauser: Object,
+});
 
 const emit = defineEmits(["submit"]);
 
@@ -128,36 +122,49 @@ const form = reactive({
   rol: [],
 });
 
+/**
+ * Reinicia el formulario a sus valores por defecto.
+ */
+const resetForm = () => {
+  form.usuario = "";
+  form.nombres = "";
+  form.password = "";
+  form.perfil = "";
+  form.rol = [];
+};
 
-
-// 👇 Observa cuando cambien el modo o el datauser
+/**
+ * Observa los cambios en el modo del componente para inicializar o reiniciar el formulario.
+ */
 watch(
-  () => [props.mode, props.datauser],
-  ([mode, user]) => {
-    if (mode === "edit" && user) {
-      form.usuario = user.username || "";
-      form.nombres = user.name || "";
-      form.password = ""; // normalmente no se precarga
-      form.perfil = user.id_perfil || "";
-      form.rol = user.role ? [...user.role] : [];
-    } else if (mode === "create") {
-      // limpiar formulario en modo crear
-      form.usuario = "";
+  () => props.mode,
+  (newMode) => {
+    // Si el modo es 'edit' y hay datos, carga la información del usuario
+    if (newMode === "edit" && props.datauser) {
+      form.usuario = props.datauser.username || "";
+      form.nombres = props.datauser.name || "";
+      form.password = ""; // Se deja vacío por seguridad
+      form.perfil = props.datauser.id_perfil || "";
+      form.rol = props.datauser.role ? [...props.datauser.role] : [];
+    }
+    // Si el modo es 'reset' y hay datos, solo prepara el formulario para la contraseña
+    else if (newMode === "reset" && props.datauser) {
+      // Limpia todos los campos excepto el de usuario para el restablecimiento
+      form.usuario = props.datauser.username || "";
       form.nombres = "";
       form.password = "";
       form.perfil = "";
       form.rol = [];
     }
+    // Si el modo es 'create' o cualquier otro, reinicia el formulario
+    else if (newMode === "create") {
+      resetForm();
+    }
   },
-  { immediate: true } // ejecuta también al montar el componente
+  { immediate: true }
 );
 
-
-
 const submitForm = () => {
-  emit("submit", { ...form }); // directo como objeto
+  emit("submit", { ...form });
 };
-
-
-
 </script>
