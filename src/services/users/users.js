@@ -32,8 +32,17 @@ if (!response.ok) throw new Error('Error al obtener los usuarios');
 
 
 
+
+
+
+
+
+
+
 export async function createUser(userData) {
   const token = getToken();
+
+    console.log("servicio datos a crear "+userData)
 
   const response = await fetch(endpoints.base + "api_usuarios.php", {
     method: "POST",
@@ -48,3 +57,53 @@ export async function createUser(userData) {
 
   return await response.json();
 }
+
+
+
+
+
+
+
+
+
+export async function updateUser(userData) {
+  const token = getToken();
+
+  console.log("servicio datos a actualizar "+userData)
+
+  const response = await fetch(endpoints.base + "api_usuarios.php", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (!response.ok) throw new Error("Error al crear usuario");
+
+  return await response.json();
+}
+
+
+
+
+export async function deleteUser(userData) {
+  const token = getToken();
+
+  console.log("servicio datos a eliminar "+userData.id)
+
+  const response = await fetch(endpoints.base + "api_usuarios.php", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (!response.ok) throw new Error("Error al crear usuario");
+
+  return await response.json();
+}
+

@@ -137,10 +137,20 @@
                   </button>
                   <button
                     class="rounded-md bg-amber-500 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-                    @click="abrirModal('reset')"
+                    @click="abrirModal('reset',user)"
                   >
                     Rest. contraseña
                   </button>
+
+                    <button
+                    class="rounded-md bg-amber-500 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                    @click="abrirModal('delete',user)"
+                  >
+                    Eliminar
+                  </button>
+
+
+
                 </div>
               </td>
             </tr>
@@ -241,7 +251,7 @@
       :error="error"
       :success="success"
       @close="cerrarModal"
-      @save="guardarUsuario"
+      @save="generarusuario"
       
   />
         
@@ -253,6 +263,7 @@
 import { ref, onMounted } from 'vue';
 import UserModal from '@/components/users/UserModal.vue';
 import { listusers, createUser } from '@/services/users/users.js';
+import { deleteUser, updateUser } from '../../services/users/users';
 
 
 
@@ -270,6 +281,10 @@ const modalMode = ref("create");
 
 
 function abrirModal(mode, user = null) {
+
+  error.value = ""
+  success.value = ""
+
   
      const userForModal = { ...user }; 
 
@@ -291,8 +306,6 @@ const cerrarModal = () => {
   // 🔑 Al cerrar, resetea todos los estados relacionados
   
   mostrarModal.value = false
-  error.value = ""
-  success.value = ""
   modalMode.value = "create"
   usuarioSeleccionado.value = null;
 }
@@ -314,39 +327,169 @@ const cargarUsuarios = async () => {
 
 
 
+const generarusuario = async (payload) => {
 
-const guardarUsuario = async (data) => {
-  try {
-    console.log("➡️ Datos recibidos del form:", data);
-    const response = await createUser(data); // 🚀 Aquí llamas al servicio
-    console.log("➡️ Respuesta del servicio:", response)
+  const { data, mode } = payload;
+
+      switch (mode) {
+          case 'create':
+            await guardarUsuario(data);
+            break;
+          case 'edit':
+            await editarUsuario(data);
+            break;
+          case 'reset':
+            await resetearContrasena(data);
+            break;
+
+            case 'delete':
+            await eliminarUsuario(data);
+            break;
+          default:
+            console.error("Modo no reconocido:", mode);
+            // Opcional: manejar un caso por defecto
+            break;
+        }
+
+} 
 
 
-  if (response.status !== "ok") {
-      console.log("Lo sentimo paso algo en la creación.")
-
-      error.value = response.mensaje;
-
-        return;
-    };  
-
-     success.value = response.mensaje;
+  const guardarUsuario = async (data) => {
+      console.log("Proceso creacion de datos")
+          try {
+            console.log("➡️ Datos recibidos del form:", data);
+            const response = await createUser(data); // 🚀 Aquí llamas al servicio
+            console.log("➡️ Respuesta del servicio:", response)
 
 
-    await cargarUsuarios(); // refresca la lista
+          if (response.status !== "ok") {
+              console.log("Lo sentimo paso algo en la creación.")
+
+              error.value = response.mensaje;
+
+                return;
+            };  
+
+            success.value = response.mensaje;
 
 
-           // ⏳ esperar 3 segundos antes de cerrar modal
-    setTimeout(() => {
-      mostrarModal.value = false;
-    }, 3000);
+            await cargarUsuarios(); // refresca la lista
 
-  } catch (error) {
-    console.error("Error guardando usuario:", error);
-  }
-  
-  
-};
+
+                  // ⏳ esperar 3 segundos antes de cerrar modal
+            setTimeout(() => {
+              cerrarModal();
+            }, 3000);
+
+          } catch (error) {
+            console.error("Error guardando usuario:", error);
+          }
+          
+    };
+
+
+
+
+    const editarUsuario = async (data) => {
+
+      console.log("Proceso edicion de datos")
+
+        try {
+            console.log("➡️ Datos recibidos del form:", data);
+            const response = await updateUser(data); // 🚀 Aquí llamas al servicio
+            console.log("➡️ Respuesta del servicio:", response)
+
+
+          if (response.status !== "ok") {
+              console.log("Lo sentimo paso algo en la creación.")
+
+              error.value = response.mensaje;
+
+                return;
+            };  
+
+            success.value = response.mensaje;
+
+
+            await cargarUsuarios(); // refresca la lista
+
+
+                  // ⏳ esperar 3 segundos antes de cerrar modal
+            setTimeout(() => {
+              cerrarModal();
+            }, 3000);
+
+          } catch (error) {
+            console.error("Error guardando usuario:", error);
+          }
+
+
+
+    }
+
+
+
+
+
+    const eliminarUsuario = async (data) => {
+
+      console.log("Proceso eliminacion de datos")
+
+        try {
+            console.log("➡️ Datos recibidos del form:", data);
+            const response = await deleteUser(data); // 🚀 Aquí llamas al servicio
+            console.log("➡️ Respuesta del servicio:", response)
+
+
+          if (response.status !== "ok") {
+              console.log("Lo sentimo paso algo en la creación.")
+
+              error.value = response.mensaje;
+
+                return;
+            };  
+
+            success.value = response.mensaje;
+
+
+            await cargarUsuarios(); // refresca la lista
+
+
+                  // ⏳ esperar 3 segundos antes de cerrar modal
+            setTimeout(() => {
+              cerrarModal();
+            }, 3000);
+
+          } catch (error) {
+            console.error("Error guardando usuario:", error);
+          }
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    const resetearContrasena = async (data) => {
+
+      
+      console.log("Proceso reset password.")
+    }
 
 
 

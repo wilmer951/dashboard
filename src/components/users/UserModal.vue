@@ -38,7 +38,7 @@
 
 <script setup>
 
-import { computed,watch } from 'vue'
+import { computed } from 'vue'
 import Modal from '@/components/common/Modal.vue'
 import UsersForm from '@/components/users/UsersForm.vue'
 
@@ -68,6 +68,7 @@ const modalTitle = computed(() => {
   if (props.mode === "create") return "Crear Usuario"
   if (props.mode === "edit") return "Editar Usuario"
   if (props.mode === "reset") return "Resetear Contraseña"
+  if (props.mode === "delete") return "Eliminar Usuario"
   return ""
 })
 </script>
