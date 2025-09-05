@@ -263,9 +263,11 @@
 import { ref, onMounted } from 'vue';
 import UserModal from '@/components/users/UserModal.vue';
 import { listusers, createUser } from '@/services/users/users.js';
-import { deleteUser, updateUser } from '../../services/users/users';
+import { deleteUser, updateUser } from '@/services/users/users';
+import { useRolesStore } from '@/stores/catalogo/userStore';
 
 
+const rolesStore = useRolesStore();
 
 
 
@@ -312,6 +314,8 @@ const cerrarModal = () => {
 
 
 const cargarUsuarios = async () => {
+
+
 
   error.value = null;
   loading.value = true;
@@ -495,6 +499,8 @@ const generarusuario = async (payload) => {
 
 
 
-
-onMounted(cargarUsuarios);
+onMounted(async () => {
+  await cargarUsuarios()
+  await rolesStore.cargarRoles()
+})
 </script>   

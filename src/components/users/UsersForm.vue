@@ -121,8 +121,10 @@
           class="mt-1 block w-full rounded-lg border-2 border-gray-300 shadow-sm transition-all duration-200 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm p-3 h-32 focus:outline-none"
           required
         >
-          <option :value="1">Administrador</option>
-          <option :value="2">Tecnico</option>
+
+          <option v-for="rol in rolesStore.roles" :key="rol.id_rol" :value="rol.id_rol">
+            {{ rol.nombre_rol }}
+    </option>
           
         </select>
       </div>
@@ -162,16 +164,31 @@
           class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
         >
           Guardar
-        </button>
-      </div>
+          </button>
 
-       <pre class="mt-6 bg-gray-50 text-gray-700 p-4 rounded-xl border border-gray-200 text-sm overflow-auto">{{ form }}</pre>-->
+          
+    
+      </div>
+      
+
+
+
+      <!--  <pre class="mt-6 bg-gray-50 text-gray-700 p-4 rounded-xl border border-gray-200 text-sm overflow-auto">{{ form }}</pre>-->
     </form>
   </div>
 </template>
 
 <script setup>
 import { watch, reactive,computed } from "vue";
+import { useRolesStore } from "@/stores/catalogo/userStore";
+
+const rolesStore = useRolesStore();
+
+
+
+
+
+
 
 const props = defineProps({
   mode: String, // create | edit | reset
