@@ -19,6 +19,7 @@
           class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
           placeholder=" "
           required
+          :disabled="mode === 'edit'"
         />
         <label
           for="usuario"
@@ -62,6 +63,33 @@
         </label>
       </div>
 
+
+
+    <div v-if="mode === 'create' || mode === 'reset'" class="relative">
+      <input
+        v-model="form.confirmarContrasena"
+        type="password"
+        id="confirmarContrasena"
+        class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+        placeholder=" "
+        required
+      />
+      <label
+        for="confirmarContrasena"
+        class="absolute top-2 left-4 text-gray-500 text-xs duration-300 transform -translate-y-2 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-2 peer-focus:scale-75 peer-focus:-translate-y-2"
+      >
+        Confirmar Contraseña
+      </label>
+
+          <p
+          v-if="(mode === 'create' || mode === 'reset') && form.password && form.confirmarContrasena && !contrasenasCoinciden"
+          class="text-red-600 text-sm"
+        >
+          Las contraseñas no coinciden
+        </p>
+    </div>
+
+
       <div v-if="mode === 'create' || mode === 'edit'" class="relative">
         <select
           v-model.number="form.perfil"
@@ -70,9 +98,9 @@
           required
         >
           <option disabled value="" class="text-gray-400">Seleccione perfil</option>
-          <option :value="1">Administrador</option>
-          <option :value="2">Editor</option>
-          <option :value="3">Invitado</option>
+          <option :value="1">Prueba</option>
+          <option :value="2">Supervisor</option>
+          <option :value="3">Asesor</option>
         </select>
         <label
           for="perfil"
@@ -93,9 +121,9 @@
           class="mt-1 block w-full rounded-lg border-2 border-gray-300 shadow-sm transition-all duration-200 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm p-3 h-32 focus:outline-none"
           required
         >
-          <option :value="1">Rol 1</option>
-          <option :value="2">Rol 2</option>
-          <option :value="3">Rol 3</option>
+          <option :value="1">Administrador</option>
+          <option :value="2">Tecnico</option>
+          
         </select>
       </div>
 
@@ -129,7 +157,7 @@
 
 
       <div class="pt-4">
-        <button
+        <button  :disabled="(mode === 'create' || mode === 'reset') && !contrasenasCoinciden"   
           type="submit"
           class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
         >
@@ -143,7 +171,7 @@
 </template>
 
 <script setup>
-import { watch, reactive } from "vue";
+import { watch, reactive,computed } from "vue";
 
 const props = defineProps({
   mode: String, // create | edit | reset
@@ -160,6 +188,7 @@ const form = reactive({
   perfil: "",
   rol: [],
   estado: "",
+  confirmarContrasena: "",
 });
 
 /**
@@ -174,6 +203,10 @@ const resetForm = () => {
   form.rol = [];
   form.estado = ""
 };
+
+
+
+
 
 /**
  * Observa los cambios en el modo del componente para inicializar o reiniciar el formulario.
@@ -215,8 +248,6 @@ watch(
     }
 
 
-
-
     // Si el modo es 'create' o cualquier otro, reinicia el formulario
     else if (newMode === "create") {
       resetForm();
@@ -224,6 +255,13 @@ watch(
   },
   { immediate: true }
 );
+
+
+
+const contrasenasCoinciden = computed(() => {
+  return form.password === form.confirmarContrasena;
+});
+
 
 const submitForm = () => {
   emit("submit", { data: { ...form }, mode: props.mode });
