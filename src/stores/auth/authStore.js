@@ -2,15 +2,16 @@
 import { defineStore } from 'pinia';
 import { login as apiLogin, logout as apiLogout } from '@/services/auth/authService';
 
-
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     jwtToken: localStorage.getItem('jwt_token') || null,
-    rolId: localStorage.getItem('id_rol') || null,
+    roles: JSON.parse(localStorage.getItem('roles') || "[]"), // siempre array
     usuario: localStorage.getItem('usuario') || null,
   }),
   getters: {
     isAuthenticated: (state) => !!state.jwtToken,
+    
+    isAllowed: (state) => state.roles.includes("1"),
   },
   actions: {
     async login(usuario, password) {
@@ -18,24 +19,30 @@ export const useAuthStore = defineStore('auth', {
     
       if (result.success) {
         this.jwtToken = result.data.token;
-        this.rolId = result.data.rol;
-        this.usuario = usuario;
+
+        // ⚡ Usar id_rol que viene del backend
+          this.roles = result.data.rol
+        ? String(result.data.rol).split(",").map(r => r.trim())
+        : [];
+
+        this.usuario = result.data.usuario;
         
-        // Guardar en localStorage desde la store
+        // Guardar en localStorage
         localStorage.setItem('jwt_token', this.jwtToken);
-        localStorage.setItem('id_rol', this.rolId);
+        localStorage.setItem('roles', JSON.stringify(this.roles));
         localStorage.setItem('usuario', this.usuario);
 
         return true;
-      } else {
-        return false;
       }
+      return false;
     },
     logout() {
       this.jwtToken = null;
-      this.rolId = null;
-    apiLogout();
+      this.roles = [];
+      this.usuario = null;
 
+      localStorage.clear(); // o removeItem('jwt_token') / removeItem('roles') / removeItem('usuario')
+      apiLogout();
     }
   }
 });

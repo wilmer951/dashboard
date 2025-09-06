@@ -61,10 +61,10 @@ export async function login(usuario, password) {
     });
 
     const data = await response.json();
+    console.log("Respuesta API login:", data);
 
     if (response.ok && data.estado) {
-      localStorage.setItem('jwt_token', data.token);
-      localStorage.setItem('id_rol', data.rol);
+      
       return { success: true, message: 'Inicio de sesión exitoso', data };
 
     } else {
