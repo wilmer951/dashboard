@@ -7,6 +7,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     jwtToken: localStorage.getItem('jwt_token') || null,
     rolId: localStorage.getItem('id_rol') || null,
+    usuario: localStorage.getItem('usuario') || null,
   }),
   getters: {
     isAuthenticated: (state) => !!state.jwtToken,
@@ -14,14 +15,16 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async login(usuario, password) {
       const result = await apiLogin(usuario, password);
-
+    
       if (result.success) {
         this.jwtToken = result.data.token;
         this.rolId = result.data.rol;
-
+        this.usuario = usuario;
+        
         // Guardar en localStorage desde la store
         localStorage.setItem('jwt_token', this.jwtToken);
         localStorage.setItem('id_rol', this.rolId);
+        localStorage.setItem('usuario', this.usuario);
 
         return true;
       } else {

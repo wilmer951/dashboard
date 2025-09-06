@@ -263,6 +263,7 @@
 import { ref, onMounted } from 'vue';
 import UserModal from '@/components/users/UserModal.vue';
 import { listUsers, createUser,deleteUser, updateUser } from '@/services/users/userService.js';
+import { resetPassword } from '@/services/users/passwordService';
 import { useRolesStore } from '@/stores/users/userRolesStore';
 import { usePerfilesStore } from '@/stores/users/userPerfilesStore';
 
@@ -479,20 +480,37 @@ const generarusuario = async (payload) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
     const resetearContrasena = async (data) => {
 
       
-      console.log("Proceso reset password.")
+    console.log("Proceso creacion de datos")
+          try {
+            console.log("➡️ Datos recibidos del form:", data);
+            const response = await resetPassword(data); // 🚀 Aquí llamas al servicio
+            console.log("➡️ Respuesta del servicio:", response)
+
+
+          if (response.status !== "ok") {
+              console.log("Lo sentimo paso algo en la creación.")
+
+              error.value = response.mensaje;
+
+                return;
+            };  
+
+            success.value = response.mensaje;
+
+
+
+
+                  // ⏳ esperar 3 segundos antes de cerrar modal
+            setTimeout(() => {
+              cerrarModal();
+            }, 3000);
+
+          } catch (error) {
+            console.error("Error guardando usuario:", error);
+          }
     }
 
 
