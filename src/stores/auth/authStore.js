@@ -3,7 +3,10 @@ import { defineStore } from 'pinia';
 import { login as apiLogin, logout as apiLogout } from '@/services/auth/authService';
 
 // Es una buena práctica definir roles como constantes para mejorar la legibilidad.
-const ADMIN_ROLE_ID = "1";
+const ACCESOTOTAL  = ["1"];
+const AUDITOR  = ["1","3"];
+const ADUTORCALIDAD  = ["1", "2"];
+
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -13,7 +16,10 @@ export const useAuthStore = defineStore('auth', {
   }),
   getters: {
     isAuthenticated: (state) => !!state.jwtToken,
-    isAllowed: (state) => state.roles.includes(ADMIN_ROLE_ID),
+    isAllowed: (state) => state.roles.some(r => ACCESOTOTAL.includes(r)),
+    isAuditor: (state) => state.roles.some(r => AUDITOR.includes(r)),
+    isAudiCalidad: (state) => state.roles.some(r => ADUTORCALIDAD.includes(r)),
+    
   },
   actions: {
     async login(usuario, password) {

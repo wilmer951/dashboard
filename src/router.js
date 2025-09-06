@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from './views/auth/login.vue'
 import Main from "./components/layout/main.vue";
-import Dashboard from "./views/dashboard.vue"
+import Dashboard from "./views/dashboardView.vue"
 import PageNotFound from "./views/PageNotFound.vue";
 import Users from "./views/users/users.vue";
-
+import home from "./views/homeView.vue";
+import calidad from "./views/module/calidadview.vue";
+import auditorView from "./views/module/auditorView.vue";
 
 
 
@@ -27,7 +29,10 @@ const routes = [
     children: [
       { path: '', redirect: '/dashboard' }, // Redirige la ruta raíz '/' a '/dashboard'
       { path: 'dashboard', name: 'dashboard', component: Dashboard },
-      { path: 'users', name: 'users', component: Users }
+      { path: 'users', name: 'users', component: Users },
+      { path: 'home', name: 'home', component: home },
+      { path: 'calidad', name: 'calidad', component: calidad }, 
+      { path: 'auditor', name: 'auditor', component: auditorView }, 
       
     ]
   },
