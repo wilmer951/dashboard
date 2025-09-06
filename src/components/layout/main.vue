@@ -54,7 +54,7 @@
         <!-- Espacio para otros elementos del header, como un buscador o perfil de usuario -->
         <div class="flex-1"></div>
         <div>
-            <span v-if="authStore.isAuthenticated && authStore.isAllowed" class="text-gray-700 dark:text-gray-300">Bienvenido {{ authStore.usuario }}</span>
+            <span v-if="authStore.isAuthenticated" class="text-gray-700 dark:text-gray-300">Bienvenido {{ authStore.usuario }}</span>
         </div>
       </header>
 

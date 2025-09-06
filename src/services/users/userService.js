@@ -53,7 +53,7 @@ export async function createUser(userData) {
     body: JSON.stringify(userData),
   });
 
-  if (!response.ok) throw new Error("Error al actualizar usuario");
+  if (!response.ok) throw new Error("Error al crear usuario");
 
   return await response.json();
 }
@@ -80,7 +80,7 @@ export async function updateUser(userData) {
     body: JSON.stringify(userData),
   });
 
-  if (!response.ok) throw new Error("Error al eliminar usuario");
+  if (!response.ok) throw new Error("Error al actualizar usuario");
 
   return await response.json();
 }
@@ -102,7 +102,7 @@ export async function deleteUser(userData) {
     body: JSON.stringify(userData),
   });
 
-  if (!response.ok) throw new Error("Error al crear usuario");
+  if (!response.ok) throw new Error("Error al eliminar usuario");
 
   return await response.json();
 }

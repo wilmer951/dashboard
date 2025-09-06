@@ -61,7 +61,7 @@ export async function login(usuario, password) {
     });
 
     const data = await response.json();
-    console.log("Respuesta API login:", data);
+    
 
     if (response.ok && data.estado) {
       

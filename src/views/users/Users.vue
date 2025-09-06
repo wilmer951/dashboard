@@ -331,191 +331,86 @@ const cargarUsuarios = async () => {
 };
 
 
-
-const generarusuario = async (payload) => {
-
+const generarusuario = (payload) => {
   const { data, mode } = payload;
 
-      switch (mode) {
-          case 'create':
-            await guardarUsuario(data);
-            break;
-          case 'edit':
-            await editarUsuario(data);
-            break;
-          case 'reset':
-            await resetearContrasena(data);
-            break;
+  switch (mode) {
+    case "create":
+      guardarUsuario(data);
+      break;
+    case "edit":
+      editarUsuario(data);
+      break;
+    case "reset":
+      resetearContrasena(data);
+      break;
+    case "delete":
+      eliminarUsuario(data);
+      break;
+    default:
+      console.error("Modo no reconocido:", mode);
+      break;
+  }
+};
 
-            case 'delete':
-            await eliminarUsuario(data);
-            break;
-          default:
-            console.error("Modo no reconocido:", mode);
-            // Opcional: manejar un caso por defecto
-            break;
-        }
+const handleApiCall = async (apiFunction, data, { successMessage, errorMessage, refresh = true }) => {
+  try {
+    console.log(`➡️ Ejecutando ${apiFunction.name} con:`, data);
+    const response = await apiFunction(data);
+    console.log("⬅️ Respuesta del servicio:", response);
 
-} 
-
-
-  const guardarUsuario = async (data) => {
-      console.log("Proceso creacion de datos")
-          try {
-            console.log("➡️ Datos recibidos del form:", data);
-            const response = await createUser(data); // 🚀 Aquí llamas al servicio
-            console.log("➡️ Respuesta del servicio:", response)
-
-
-          if (response.status !== "ok") {
-              console.log("Lo sentimo paso algo en la creación.")
-
-              error.value = response.mensaje;
-
-                return;
-            };  
-
-            success.value = response.mensaje;
-
-
-            await cargarUsuarios(); // refresca la lista
-
-
-                  // ⏳ esperar 3 segundos antes de cerrar modal
-            setTimeout(() => {
-              cerrarModal();
-            }, 3000);
-
-          } catch (error) {
-            console.error("Error guardando usuario:", error);
-          }
-          
-    };
-
-
-
-
-    const editarUsuario = async (data) => {
-
-      console.log("Proceso edicion de datos")
-
-        try {
-            console.log("➡️ Datos recibidos del form:", data);
-            const response = await updateUser(data); // 🚀 Aquí llamas al servicio
-            console.log("➡️ Respuesta del servicio:", response)
-
-
-          if (response.status !== "ok") {
-              console.log("Lo sentimo paso algo en la creación.")
-
-              error.value = response.mensaje;
-
-                return;
-            };  
-
-            success.value = response.mensaje;
-
-
-            await cargarUsuarios(); // refresca la lista
-
-
-                  // ⏳ esperar 3 segundos antes de cerrar modal
-            setTimeout(() => {
-              cerrarModal();
-            }, 3000);
-
-          } catch (error) {
-            console.error("Error guardando usuario:", error);
-          }
-
-
-
+    if (response.status !== "ok") {
+      error.value = response.mensaje || errorMessage;
+      success.value = null;
+      return;
     }
 
+    success.value = response.mensaje || successMessage;
+    error.value = null;
 
-
-
-
-    const eliminarUsuario = async (data) => {
-
-      console.log("Proceso eliminacion de datos")
-
-        try {
-            console.log("➡️ Datos recibidos del form:", data);
-            const response = await deleteUser(data); // 🚀 Aquí llamas al servicio
-            console.log("➡️ Respuesta del servicio:", response)
-
-
-          if (response.status !== "ok") {
-              console.log("Lo sentimo paso algo en la creación.")
-
-              error.value = response.mensaje;
-
-                return;
-            };  
-
-            success.value = response.mensaje;
-
-
-            await cargarUsuarios(); // refresca la lista
-
-
-                  // ⏳ esperar 3 segundos antes de cerrar modal
-            setTimeout(() => {
-              cerrarModal();
-            }, 3000);
-
-          } catch (error) {
-            console.error("Error guardando usuario:", error);
-          }
-
-
-
+    if (refresh) {
+      await cargarUsuarios();
     }
 
+    setTimeout(() => {
+      cerrarModal();
+    }, 3000);
 
+  } catch (err) {
+    console.error(`Error en ${apiFunction.name}:`, err);
+    error.value = err.message || 'Ocurrió un error inesperado.';
+    success.value = null;
+  }
+};
 
+const guardarUsuario = (data) => {
+  handleApiCall(createUser, data, {
+    successMessage: "Usuario creado con éxito.",
+    errorMessage: "Ocurrió un error al crear el usuario.",
+  });
+};
 
+const editarUsuario = (data) => {
+  handleApiCall(updateUser, data, {
+    successMessage: "Usuario actualizado con éxito.",
+    errorMessage: "Ocurrió un error al actualizar el usuario.",
+  });
+};
 
+const eliminarUsuario = (data) => {
+  handleApiCall(deleteUser, data, {
+    successMessage: "Usuario eliminado con éxito.",
+    errorMessage: "Ocurrió un error al eliminar el usuario.",
+  });
+};
 
-
-
-    const resetearContrasena = async (data) => {
-
-      
-    console.log("Proceso creacion de datos")
-          try {
-            console.log("➡️ Datos recibidos del form:", data);
-            const response = await resetPassword(data); // 🚀 Aquí llamas al servicio
-            console.log("➡️ Respuesta del servicio:", response)
-
-
-          if (response.status !== "ok") {
-              console.log("Lo sentimo paso algo en la creación.")
-
-              error.value = response.mensaje;
-
-                return;
-            };  
-
-            success.value = response.mensaje;
-
-
-
-
-                  // ⏳ esperar 3 segundos antes de cerrar modal
-            setTimeout(() => {
-              cerrarModal();
-            }, 3000);
-
-          } catch (error) {
-            console.error("Error guardando usuario:", error);
-          }
-    }
-
-
-
-
+const resetearContrasena = (data) => {
+  handleApiCall(resetPassword, data, {
+    successMessage: "Contraseña reseteada con éxito.",
+    errorMessage: "Ocurrió un error al resetear la contraseña.",
+    refresh: false,
+  });
+};
 
 onMounted(async () => {
   await cargarUsuarios()
