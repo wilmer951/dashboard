@@ -262,13 +262,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import UserModal from '@/components/users/UserModal.vue';
-import { listusers, createUser } from '@/services/users/users.js';
-import { deleteUser, updateUser } from '@/services/users/users';
-import { useRolesStore } from '@/stores/catalogo/userStore';
+import { listUsers, createUser,deleteUser, updateUser } from '@/services/users/userService.js';
+import { useRolesStore } from '@/stores/users/userRolesStore';
+import { usePerfilesStore } from '@/stores/users/userPerfilesStore';
 
 
 const rolesStore = useRolesStore();
-
+const perfilStore = usePerfilesStore();
 
 
 // Estado reactivo
@@ -320,8 +320,8 @@ const cargarUsuarios = async () => {
   error.value = null;
   loading.value = true;
   try {
-    console.log(await listusers());
-    users.value = await listusers();  // ya viene transformado
+    console.log(await listUsers());
+    users.value = await listUsers();  // ya viene transformado
   } catch (err) {
     error.value = err.message;
   } finally {
@@ -502,5 +502,6 @@ const generarusuario = async (payload) => {
 onMounted(async () => {
   await cargarUsuarios()
   await rolesStore.cargarRoles()
+  await perfilStore.cargarPerfiles()
 })
 </script>   

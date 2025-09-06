@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { listRoles } from '@/services/catalogos/roles'
+import { listRoles } from '@/services/users/rolesService'
 
 export const useRolesStore = defineStore('roles', {
 
@@ -24,4 +24,13 @@ export const useRolesStore = defineStore('roles', {
       }
     }
   }
+
+
+
+
+
+  
+  
+
+
 })

@@ -74,9 +74,14 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { login } from '@/services/auth/authService';
+import { useAuthStore } from '../../stores/auth/authStore'; 
+
+
 
 const router = useRouter();
+const authStore = useAuthStore(); 
+
+
 
 const username = ref('');
 const password = ref('');
@@ -87,11 +92,11 @@ const handleLogin = async () => {
   errorMessage.value = null;
   loading.value = true;
   
-  const result = await login(username.value, password.value);
+  const success = await authStore.login(username.value, password.value);
 
   loading.value = false;
 
-  if (result.success) {
+  if (success) {
     // Asumiendo que tienes una ruta '/dashboard' en tu router
     router.push('/dashboard');
   } else {

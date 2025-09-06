@@ -92,15 +92,15 @@
 
       <div v-if="mode === 'create' || mode === 'edit'" class="relative">
         <select
-          v-model.number="form.perfil"
+          v-model="form.perfil"
           id="perfil"
           class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
           required
         >
           <option disabled value="" class="text-gray-400">Seleccione perfil</option>
-          <option :value="1">Prueba</option>
-          <option :value="2">Supervisor</option>
-          <option :value="3">Asesor</option>
+          <option v-for="perfil in perfilStore.perfiles" :key="perfil.id_perfil" :value="perfil.id_perfil">
+            {{ perfil.nombre_perfil }}
+    </option>
         </select>
         <label
           for="perfil"
@@ -180,9 +180,11 @@
 
 <script setup>
 import { watch, reactive,computed } from "vue";
-import { useRolesStore } from "@/stores/catalogo/userStore";
+import { useRolesStore } from "@/stores/users/userRolesStore";
+import { usePerfilesStore } from "@/stores/users/userPerfilesStore";
 
 const rolesStore = useRolesStore();
+const perfilStore = usePerfilesStore();
 
 
 

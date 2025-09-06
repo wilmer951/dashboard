@@ -3,7 +3,7 @@ import { getToken } from "@/services/auth/authService";
 console.log("SERVICIO USERS CARGADO ✅");
 
 
-export async function listusers() {
+export async function listUsers() {
   const token = getToken();
   
   const response = await fetch(endpoints.base+'api_usuarios.php', {
@@ -53,7 +53,7 @@ export async function createUser(userData) {
     body: JSON.stringify(userData),
   });
 
-  if (!response.ok) throw new Error("Error al crear usuario");
+  if (!response.ok) throw new Error("Error al actualizar usuario");
 
   return await response.json();
 }
@@ -80,7 +80,7 @@ export async function updateUser(userData) {
     body: JSON.stringify(userData),
   });
 
-  if (!response.ok) throw new Error("Error al crear usuario");
+  if (!response.ok) throw new Error("Error al eliminar usuario");
 
   return await response.json();
 }
@@ -106,4 +106,3 @@ export async function deleteUser(userData) {
 
   return await response.json();
 }
-

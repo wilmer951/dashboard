@@ -74,13 +74,18 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { logout as doLogout } from '@/services/auth/authService';
+import { useAuthStore } from '@/stores/auth/authStore';
+
+
+
 
 const router = useRouter();
 const isSidebarOpen = ref(false);
+const authStore = useAuthStore(); 
+
 
 const logout = () => {
-  doLogout();        // Lógica de limpieza centralizada
+  authStore.logout();     // Lógica de limpieza centralizada
   router.push('/login'); // Redirección después del logout
 };
 </script>
