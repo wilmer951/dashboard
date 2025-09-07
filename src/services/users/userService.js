@@ -9,7 +9,7 @@ console.log("SERVICIO USERS CARGADO ✅");
 export async function listUsers() {
   const token = useAuthStore().jwtToken;
   
-  const response = await fetch(endpoints.base+'api_usuarios.php', {
+  const response = await fetch(endpoints.base+'users/api_usuarios.php', {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -47,7 +47,7 @@ export async function createUser(userData) {
 
     console.log("servicio datos a crear "+userData)
 
-  const response = await fetch(endpoints.base + "api_usuarios.php", {
+  const response = await fetch(endpoints.base + "users/api_usuarios.php", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export async function updateUser(userData) {
 
   console.log("servicio datos a actualizar "+userData)
 
-  const response = await fetch(endpoints.base + "api_usuarios.php", {
+  const response = await fetch(endpoints.base + "users/api_usuarios.php", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export async function deleteUser(userData) {
 
   console.log("servicio datos a eliminar "+userData.id)
 
-  const response = await fetch(endpoints.base + "api_usuarios.php", {
+  const response = await fetch(endpoints.base + "users/api_usuarios.php", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

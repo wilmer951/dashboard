@@ -6,7 +6,7 @@ console.log("SERVICIO ROLES CARGADO ✅");
 export async function listRoles() {
   const token = useAuthStore().jwtToken;
   
-  const response = await fetch(endpoints.base+'api_roles.php', {
+  const response = await fetch(endpoints.base+'users/api_roles.php', {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`

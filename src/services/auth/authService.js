@@ -5,7 +5,7 @@ export async function isTokenValid(token) {
   
 
       try {
-        const response = await fetch(endpoints.base+'api_check-auth.php', {
+        const response = await fetch(endpoints.base+'login/api_check-auth.php', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -43,7 +43,7 @@ export async function login(usuario, password) {
   const loginData = { usuario, password };
 
   try {
-    const response = await fetch(endpoints.base+'api_login.php', {
+    const response = await fetch(endpoints.base+'login/api_login.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

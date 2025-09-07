@@ -9,7 +9,7 @@ export async function resetPassword(userData) {
 
     console.log("servicio datos a crear ",userData)
 
-  const response = await fetch(endpoints.base + "api_resetPasswrod.php", {
+  const response = await fetch(endpoints.base + "users/api_resetPasswrod.php", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

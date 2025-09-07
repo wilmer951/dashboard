@@ -6,7 +6,7 @@ console.log("SERVICIO PERFILES CARGADO ✅");
 export async function listPerfiles() {
   const token = useAuthStore().jwtToken;
   
-  const response = await fetch(endpoints.base+'api_perfiles.php', {
+  const response = await fetch(endpoints.base+'users/api_perfiles.php', {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
