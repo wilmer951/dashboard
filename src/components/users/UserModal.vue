@@ -7,7 +7,7 @@
       <div class="flex justify-between items-center w-full">
         <h3 class="text-2xl font-bold text-gray-900">{{ modalTitle }}</h3>
 
-        
+
         <button 
           @click="$emit('close')" 
           class="text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none"
@@ -27,14 +27,6 @@
     
 
 
-  
-    <div v-if="error" class="mt-3 p-2 bg-red-100 text-red-700 rounded">
-      ⚠️ {{ error }}
-    </div>
-
-    <div v-if="success" class="mt-3 p-2 bg-green-100 text-green-700 rounded">
-      ✅ {{ success }}
-    </div>
   </Modal>
 </template>
 
@@ -48,8 +40,6 @@ import UsersForm from '@/components/users/UsersForm.vue'
 
 const props = defineProps({
   mode: String, // create | edit | reset
-  error: String,
-  success: String,
   selectedUser:Object
 
   

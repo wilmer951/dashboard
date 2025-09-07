@@ -78,8 +78,6 @@
       :visible="mostrarModal" 
       :mode="modalMode" 
       :selectedUser="usuarioSeleccionado"
-      :error="error"
-      :success="success"
       @close="cerrarModal"
       @save="handleUserAction"
   />
@@ -92,6 +90,10 @@ import { listUsers, createUser,deleteUser, updateUser } from '@/services/users/u
 import { resetPassword } from '@/services/users/passwordService';
 import { useRolesStore } from '@/stores/users/userRolesStore';
 import { usePerfilesStore } from '@/stores/users/userPerfilesStore';
+import Swal from 'sweetalert2';
+
+
+
 
 // 1. Store instances
 const rolesStore = useRolesStore();
@@ -166,19 +168,36 @@ const handleApiCall = async (apiFunction, data, { successMessage, errorMessage, 
     if (response.status !== "ok") {
       error.value = response.mensaje || errorMessage;
       success.value = null;
+
+      
+        Swal.fire({
+          title: error.value,
+          icon: "error",
+          draggable: true
+        });
+
+
       return;
     }
 
     success.value = response.mensaje || successMessage;
     error.value = null;
 
-    if (refresh) {
-      await cargarUsuarios();
-    }
 
-    setTimeout(() => {
-      cerrarModal();
-    }, 3000);
+        Swal.fire({
+        title: success.value,
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          
+          cerrarModal();  
+          if (refresh) cargarUsuarios();
+        }
+      });
+
+
+
 
   } catch (err) {
     console.error(`Error en ${apiFunction.name}:`, err);
@@ -222,5 +241,9 @@ onMounted(async () => {
   await cargarUsuarios()
   await rolesStore.cargarRoles()
   await perfilStore.cargarPerfiles()
+
+
+
+  
 })
 </script>   
