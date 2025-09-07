@@ -6,6 +6,8 @@
     <template #header>
       <div class="flex justify-between items-center w-full">
         <h3 class="text-2xl font-bold text-gray-900">{{ modalTitle }}</h3>
+
+        
         <button 
           @click="$emit('close')" 
           class="text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none"

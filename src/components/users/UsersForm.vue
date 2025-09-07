@@ -1,6 +1,14 @@
 <template>
   <div class="max-w-xl mx-auto p-8 bg-white rounded-3xl shadow-2xl">
 
+        <p
+          v-if="(mode === 'delete')"
+          class="text-red-600 text-sm"
+        >
+          Estas seguro de eliminar este usuario?
+        </p>
+
+
     <form @submit.prevent="submitForm" class="space-y-6">
 
         <input
@@ -19,7 +27,7 @@
           class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
           placeholder=" "
           required
-          :disabled="mode === 'edit'"
+          :disabled="mode === 'edit' || mode === 'delete'"
         />
         <label
           for="usuario"
@@ -163,7 +171,7 @@
           type="submit"
           class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
         >
-          Guardar
+          Enviar
           </button>
 
           
@@ -197,7 +205,7 @@ const props = defineProps({
   datauser: Object,
 });
 
-const emit = defineEmits(["submit"]);
+
 
 const form = reactive({
   id:null,
@@ -282,7 +290,14 @@ const contrasenasCoinciden = computed(() => {
 });
 
 
+
+
+
 const submitForm = () => {
   emit("submit", { data: { ...form }, mode: props.mode });
 };
+
+
+const emit = defineEmits(["submit"]);
+
 </script>
