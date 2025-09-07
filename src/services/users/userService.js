@@ -1,10 +1,13 @@
 import endpoints from "@/services/api/endpoints";
-import { getToken } from "@/services/auth/authService";
+import { useAuthStore } from "@/stores/auth/authStore";
+
 console.log("SERVICIO USERS CARGADO ✅");
 
 
+
+
 export async function listUsers() {
-  const token = getToken();
+  const token = useAuthStore().jwtToken;
   
   const response = await fetch(endpoints.base+'api_usuarios.php', {
     method: 'GET',
@@ -40,7 +43,7 @@ if (!response.ok) throw new Error('Error al obtener los usuarios');
 
 
 export async function createUser(userData) {
-  const token = getToken();
+  const token = useAuthStore().jwtToken;
 
     console.log("servicio datos a crear "+userData)
 
@@ -67,7 +70,7 @@ export async function createUser(userData) {
 
 
 export async function updateUser(userData) {
-  const token = getToken();
+  const token = useAuthStore().jwtToken;
 
   console.log("servicio datos a actualizar "+userData)
 
@@ -89,7 +92,7 @@ export async function updateUser(userData) {
 
 
 export async function deleteUser(userData) {
-  const token = getToken();
+  const token = useAuthStore().jwtToken;
 
   console.log("servicio datos a eliminar "+userData.id)
 

@@ -1,6 +1,6 @@
 // src/stores/authStore.js
 import { defineStore } from 'pinia';
-import { login as apiLogin, logout as apiLogout } from '@/services/auth/authService';
+import { login as apiLogin, logout as apiLogout, isTokenValid as apiIstokeninvalid } from '@/services/auth/authService';
 
 // Es una buena práctica definir roles como constantes para mejorar la legibilidad.
 const ACCESOTOTAL  = ["1"];
@@ -40,10 +40,43 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('roles', JSON.stringify(this.roles));
         localStorage.setItem('usuario', this.usuario);
 
-        return true;
+        return { success: true, message: "Login exitoso" };
       }
-      return false;
+    return { success: false, message: result.message || "Usuario o contraseña incorrectos" };
     },
+
+
+
+
+
+
+  // Nueva acción para validar el token
+async checkTokenValidity() {
+      
+      try {
+        if (!this.jwtToken) return false;
+
+        const valid = await apiIstokeninvalid(this.jwtToken);
+        if (!valid) {
+          await this.logout();
+        }
+        return valid;
+      } catch (error) {
+        console.error("Error en checkTokenValidity:", error);
+        await this.logout();
+        return false;
+      } finally {
+        this.isCheckingAuth = false; // Marca que la verificación inicial ha terminado
+      }
+    },
+
+
+
+
+
+
+
+
     logout() {
       this.jwtToken = null;
       this.roles = [];

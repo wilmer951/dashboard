@@ -6,12 +6,12 @@ import PageNotFound from "./views/PageNotFound.vue";
 import Users from "./views/users/users.vue";
 import home from "./views/homeView.vue";
 import calidad from "./views/module/calidadview.vue";
-import auditorView from "./views/module/auditorView.vue";
+import auditor from "./views/module/auditorView.vue";
 
 
 
 
-import { isAuthenticated, login, logout,isTokenValid } from "./services/auth/authService";   
+import { useAuthStore } from './stores/auth/authStore';
 
 
 
@@ -29,10 +29,10 @@ const routes = [
     children: [
       { path: '', redirect: '/dashboard' }, // Redirige la ruta raíz '/' a '/dashboard'
       { path: 'dashboard', name: 'dashboard', component: Dashboard },
-      { path: 'users', name: 'users', component: Users },
+      { path: 'users', name: 'users', component: Users, meta: { guard: "isAllowed" } },
       { path: 'home', name: 'home', component: home },
       { path: 'calidad', name: 'calidad', component: calidad }, 
-      { path: 'auditor', name: 'auditor', component: auditorView }, 
+      { path: 'auditor', name: 'auditor', component: auditor }, 
       
     ]
   },
@@ -52,24 +52,42 @@ const router = createRouter({
 
 
 router.beforeEach(async (to, from, next) => {
+ 
+  const authStore = useAuthStore();
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const isAuthenticated = authStore.isAuthenticated;
 
-  if (isAuthenticated()) {
-    const valid = await isTokenValid();
 
-    if (valid) {
-      if (to.name === 'login') {
-        next({ name: 'dashboard' });
-      } else {
-        next();
+    if (requiresAuth) {
+      if (!authStore.isAuthenticated) {
+        return next({ name: "login" });
+      }
+
+      try {
+        const isTokenValid = await authStore.checkTokenValidity();
+        if (!isTokenValid) {
+          await authStore.logout();
+          return next({ name: "login" });
+        }
+
+        // 🔐 Si la ruta tiene un guard específico
+        if (to.meta.guard && !authStore[to.meta.guard]) {
+          return next({ name: "dashboard" }); // o un 403
+        }
+
+        return next();
+      } catch (error) {
+        console.error("Error al validar token:", error);
+        await authStore.logout();
+        return next({ name: "login" });
       }
     } else {
-      logout();
-      next(requiresAuth ? { name: 'login' } : undefined);
+      if (authStore.isAuthenticated && to.name === "login") {
+        return next({ name: "dashboard" });
+      }
+      return next();
     }
-  } else {
-    next(requiresAuth ? { name: 'login' } : undefined);
-  }
+
 });
 
 

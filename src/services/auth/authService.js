@@ -1,35 +1,26 @@
 import endpoints from "@/services/api/endpoints";
 
-// authService.js
-export function getToken() {
-  return localStorage.getItem('jwt_token');
-}
 
-export function isAuthenticated() {
-  return !!getToken();
-}
+export async function isTokenValid(token) {
+  
 
-export async function isTokenValid() {
-  const token = getToken();
-  if (!token) return false;
-
-  try {
-    const response = await fetch(endpoints.base+'api_check-auth.php', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-    return response.ok;
-  } catch (error) {
-    console.error('Error al validar token con el backend:', error);
-    return false;
-  }
-}
+      try {
+        const response = await fetch(endpoints.base+'api_check-auth.php', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        return response.ok;
+      } catch (error) {
+        console.error('Error al validar token con el backend:', error);
+        return false;
+      }
+    }
 
 
 
-
+    
 
 
 export function logout() {

@@ -1,10 +1,10 @@
 import endpoints from "@/services/api/endpoints";
-import { getToken } from "@/services/auth/authService";
+import { useAuthStore } from "@/stores/auth/authStore";
 console.log("SERVICIO ROLES CARGADO ✅");
 
 
 export async function listRoles() {
-  const token = getToken();
+  const token = useAuthStore().jwtToken;
   
   const response = await fetch(endpoints.base+'api_roles.php', {
     method: 'GET',

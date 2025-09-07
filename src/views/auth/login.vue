@@ -92,7 +92,7 @@ const handleLogin = async () => {
   errorMessage.value = null;
   loading.value = true;
   
-  const success = await authStore.login(username.value, password.value);
+  const { success, message } = await authStore.login(username.value, password.value);
 
   loading.value = false;
 
@@ -100,7 +100,7 @@ const handleLogin = async () => {
     // Asumiendo que tienes una ruta '/dashboard' en tu router
     router.push('/dashboard');
   } else {
-    errorMessage.value = result.message;
+    errorMessage.value = message;
   }
 };
 </script>
