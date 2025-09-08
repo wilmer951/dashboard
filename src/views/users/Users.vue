@@ -52,9 +52,9 @@
                 
                 <template #table-row="props">
               
-                      <div v-if="props.column.field === 'Estado'" class="flex justify-center">
+                      <div v-if="props.column.field === 'estado'" class="flex justify-center">
                         <span
-                          v-if="props.row.estado === 1"
+                           v-if="props.row.estado == 1"  
                           class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"
                         >
                           Activo

@@ -66,7 +66,7 @@ router.beforeEach(async (to, from, next) => {
       try {
         const isTokenValid = await authStore.checkTokenValidity();
         if (!isTokenValid) {
-          await authStore.logout();
+          
           return next({ name: "login" });
         }
 
