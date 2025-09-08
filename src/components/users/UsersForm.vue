@@ -146,7 +146,6 @@
           class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
           required
         >
-          <option disabled value="" class="text-gray-400">Seleccione perfil</option>
           <option :value="1">Activo</option>
           <option :value="0">Inactivo</option>
           
@@ -155,7 +154,7 @@
           for="perfil"
           class="absolute top-2 left-4 text-gray-500 text-xs duration-300 transform -translate-y-2 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-2 peer-focus:scale-75 peer-focus:-translate-y-2"
         >
-          Perfil
+          Estado
         </label>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-700">
           <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
@@ -249,7 +248,8 @@ watch(
       form.password = ""; // Se deja vacío por seguridad
       form.perfil = props.datauser.id_perfil || "";
       form.rol = props.datauser.role ? [...props.datauser.role] : [];
-      form.estado = props.datauser.estado || "";
+      form.estado =  Number(props.datauser.estado);
+
     }
     // Si el modo es 'reset' y hay datos, solo prepara el formulario para la contraseña
     else if (newMode === "reset" && props.datauser) {

@@ -51,8 +51,26 @@
                   >
                 
                 <template #table-row="props">
+              
+                      <div v-if="props.column.field === 'Estado'" class="flex justify-center">
+                        <span
+                          v-if="props.row.estado === 1"
+                          class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"
+                        >
+                          Activo
+                        </span>
+                        <span
+                          v-else
+                          class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"
+                        >
+                          Inactivo
+                        </span>
+                      </div>
+
 
                       <div v-if="props.column.field === 'acciones'" class="flex space-x-2 justify-end">
+
+
                         <button 
                         class="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         @click="abrirModal('edit', props.row)">Editar</button>
@@ -105,7 +123,9 @@ const columns = [
   { label: "Nombre", field: "name" },
   { label: "Rol", field: "role" },
   { label: "Último Login", field: "lastLogin" },
+  { label: "Estado", field: "estado", sortable: false },
   { label: "Acciones", field: "acciones", sortable: false },
+
 ];
 
 // 2. Component State
