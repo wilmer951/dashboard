@@ -65,6 +65,7 @@ router.beforeEach(async (to, from, next) => {
 
       try {
         const isTokenValid = await authStore.checkTokenValidity();
+        
         if (!isTokenValid) {
           
           return next({ name: "login" });

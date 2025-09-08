@@ -57,12 +57,14 @@ async checkTokenValidity() {
         if (!this.jwtToken) return false;
 
         const valid = await apiIstokeninvalid(this.jwtToken);
+  
         if (!valid) {
           await this.logout();
+          return false;
         }
         return valid;
       } catch (error) {
-        console.error("Error en checkTokenValidity:", error);
+        
         await this.logout();
         return false;
       } finally {
