@@ -52,7 +52,8 @@ export async function login(username, password) {
       body: JSON.stringify(loginData)
     });
 
-    const data = await response.json();
+    const data = await response.json(); 
+    console.log('Login API response data:', data);
     
     
 
