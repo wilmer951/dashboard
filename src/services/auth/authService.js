@@ -5,7 +5,7 @@ export async function isTokenValid(token) {
   
 
       try {
-        const response = await fetch(endpoints.base+'login/api_check-auth.php', {
+        const response = await fetch('/api/check-token', {
           
           method: 'GET',
           headers: {
@@ -53,7 +53,8 @@ export async function login(username, password) {
     });
 
     const data = await response.json();
-    console.log('Login response data:', data);
+    
+    
 
     if (response.ok && response.status === 200) {
       

@@ -11,6 +11,7 @@ import auditor from "./views/module/auditorView.vue";
 
 
 
+
 import { useAuthStore } from './stores/auth/authStore';
 
 
@@ -55,22 +56,17 @@ router.beforeEach(async (to, from, next) => {
  
   const authStore = useAuthStore();
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAuthenticated = authStore.isAuthenticated;
+ 
 
 
     if (requiresAuth) {
       if (!authStore.isAuthenticated) {
+        console.warn("No autenticado, redirigiendo a login...");
         return next({ name: "login" });
       }
 
       try {
-        const isTokenValid = await authStore.checkTokenValidity();
-        
-        if (!isTokenValid) {
-          
-          return next({ name: "login" });
-        }
-
+    
         // 🔐 Si la ruta tiene un guard específico
         if (to.meta.guard && !authStore[to.meta.guard]) {
           return next({ name: "dashboard" }); // o un 403

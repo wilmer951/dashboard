@@ -3,15 +3,15 @@ import { defineStore } from 'pinia';
 import { login as apiLogin, logout as apiLogout, isTokenValid as apiIstokeninvalid } from '@/services/auth/authService';
 
 // Es una buena práctica definir roles como constantes para mejorar la legibilidad.
-const ACCESOTOTAL  = ["1"];
-const AUDITOR  = ["1","3"];
-const ADUTORCALIDAD  = ["1", "2"];
+const ACCESOTOTAL  = [1];
+const AUDITOR  = [1, 3];
+const ADUTORCALIDAD  = [1, 2];
 
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     jwtToken: localStorage.getItem('jwt_token') || null,
-    roles: JSON.parse(localStorage.getItem('roles') || "[]"), // siempre array
+    roles: JSON.parse(localStorage.getItem('roles') || "[]"), // siempre array  
     usuario: localStorage.getItem('usuario') || null,
   }),
   getters: {
@@ -28,6 +28,8 @@ export const useAuthStore = defineStore('auth', {
       if (result.success) {
         
         
+        console.log('Login successful, processing response...');
+
 
         this.jwtToken = result.data.access_token;
         console.log('Received token from backend:', result.data.access_token);
@@ -35,14 +37,11 @@ export const useAuthStore = defineStore('auth', {
         console.log('User name from backend:', result.data.username);
 
         // ⚡ Usar id_rol que viene del backend
-          this.roles = result.data.roles
-        ? String(result.data.rol).split(",").map(r => r.trim())
-        : [];
-
+       this.roles = result.data.roles ? result.data.roles : [];
         this.usuario = result.data.username;
         
         // Guardar en localStorage
-        localStorage.setItem('prueba', '123')
+        
         localStorage.setItem('jwt_token', this.jwtToken);
         localStorage.setItem('roles', JSON.stringify(this.roles));
         localStorage.setItem('usuario', this.usuario);
