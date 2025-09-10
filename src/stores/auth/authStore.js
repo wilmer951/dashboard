@@ -26,16 +26,23 @@ export const useAuthStore = defineStore('auth', {
       const result = await apiLogin(usuario, password);
     
       if (result.success) {
-        this.jwtToken = result.data.token;
+        
+        
+
+        this.jwtToken = result.data.access_token;
+        console.log('Received token from backend:', result.data.access_token);
+        console.log('User roles from backend:', result.data.roles);
+        console.log('User name from backend:', result.data.username);
 
         // ⚡ Usar id_rol que viene del backend
-          this.roles = result.data.rol
+          this.roles = result.data.roles
         ? String(result.data.rol).split(",").map(r => r.trim())
         : [];
 
-        this.usuario = result.data.usuario;
+        this.usuario = result.data.username;
         
         // Guardar en localStorage
+        localStorage.setItem('prueba', '123')
         localStorage.setItem('jwt_token', this.jwtToken);
         localStorage.setItem('roles', JSON.stringify(this.roles));
         localStorage.setItem('usuario', this.usuario);

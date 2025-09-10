@@ -14,8 +14,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': { // todo lo que empiece con /api lo mandará al backend PHP
-        target: 'http://localhost:8080/mydocu/Vista/api/',
-        changeOrigin: true,
+          target: 'http://localhost:8000/',
+         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '') // quita /api al reenviar
       }
     },

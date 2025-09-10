@@ -96,8 +96,13 @@ const handleLogin = async () => {
 
   loading.value = false;
 
+  console.log('Login result:', { success, message });
+
   if (success) {
-    // Asumiendo que tienes una ruta '/dashboard' en tu router
+
+     console.log('Redirigiendo a /dashboard');
+    // Asumiendo que t
+    // ienes una ruta '/dashboard' en tu router
     router.push('/dashboard');
   } else {
     errorMessage.value = message;

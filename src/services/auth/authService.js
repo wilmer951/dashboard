@@ -40,11 +40,11 @@ export function logout() {
 
 
 
-export async function login(usuario, password) {
-  const loginData = { usuario, password };
+export async function login(username, password) {
+  const loginData = { username, password };
 
   try {
-    const response = await fetch(endpoints.base+'login/api_login.php', {
+    const response = await fetch('/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -53,9 +53,9 @@ export async function login(usuario, password) {
     });
 
     const data = await response.json();
-    
+    console.log('Login response data:', data);
 
-    if (response.ok && data.estado) {
+    if (response.ok && response.status === 200) {
       
       return { success: true, message: 'Inicio de sesión exitoso', data };
 
