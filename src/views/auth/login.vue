@@ -100,7 +100,7 @@ const handleLogin = async () => {
 
   if (success) {
 
-     console.log('Redirigiendo a /dashboard');
+     
     // Asumiendo que t
     // ienes una ruta '/dashboard' en tu router
     router.push('/dashboard');

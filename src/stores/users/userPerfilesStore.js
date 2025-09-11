@@ -16,9 +16,9 @@ export const usePerfilesStore = defineStore('perfiles', {
 
       try {
         const response = await listPerfiles(); // Llamas al servicio
-        this.perfiles = response.data;        // Guardas los roles
+        this.perfiles = response;
         this.perfilescargados = true;  // Marcas como cargados
-        console.log("Perfiles cargados desde el store.",response.data)       
+        console.log("Perfiles cargados desde el store.",this.perfiles)       
       } catch (error) {
         console.error('Error cargando roles desde el store:', error);
       }

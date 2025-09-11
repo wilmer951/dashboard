@@ -19,11 +19,10 @@ if (!response.ok) throw new Error('Error al obtener los perfiles');
 
   const data = await response.json();
 
-
-    return data.map(profile => ({
-      id_perfil: profile.id,
-      nombre_perfil: profile.name
-    }));  
+  return data.map(perfil => ({
+    id_perfil: perfil.id,
+    nombre_perfil: perfil.name
+  }));
 
   
 

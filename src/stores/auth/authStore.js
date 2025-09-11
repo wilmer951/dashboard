@@ -32,9 +32,7 @@ export const useAuthStore = defineStore('auth', {
 
 
         this.jwtToken = result.data.access_token;
-        console.log('Received token from backend:', result.data.access_token);
-        console.log('User roles from backend:', result.data.roles);
-        console.log('User name from backend:', result.data.username);
+        
 
         // ⚡ Usar id_rol que viene del backend
        this.roles = result.data.roles ? result.data.roles : [];

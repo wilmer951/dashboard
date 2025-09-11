@@ -15,10 +15,10 @@ export async function listRoles() {
 
 if (!response.ok) throw new Error('Error al obtener los roles');
 
- console.log("Respuesta de la API de roles, status:", response);
+ 
 
   const data = await response.json();
- console.log("Respuesta de la API de roles:", data);
+ 
 
    return data.map(role => ({
      id_rol: role.id,

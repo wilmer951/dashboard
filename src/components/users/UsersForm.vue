@@ -100,7 +100,7 @@
 
       <div v-if="mode === 'create' || mode === 'edit'" class="relative">
         <select
-          v-model="form.perfil"
+          v-model.number="form.perfil"
           id="perfil"
           class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
           required
@@ -246,7 +246,7 @@ watch(
       form.usuario = props.datauser.username || "";
       form.nombres = props.datauser.name || "";
       form.password = ""; // Se deja vacío por seguridad
-      form.perfil = props.datauser.id_perfil || "";
+      form.perfil = Number(props.datauser.id_perfil);
       form.rol = props.datauser.role ? [...props.datauser.role] : [];
       form.estado =  Number(props.datauser.estado);
 
