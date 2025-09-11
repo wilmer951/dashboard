@@ -9,7 +9,7 @@ console.log("SERVICIO USERS CARGADO ✅");
 export async function listUsers() {
   const token = useAuthStore().jwtToken;
   
-  const response = await fetch(endpoints.base+'users/api_usuarios.php', {
+  const response = await fetch('api/users', {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -20,18 +20,20 @@ if (!response.ok) throw new Error('Error al obtener los usuarios');
 
   const data = await response.json();
 
-  return data.map(({ id, usuario, nombres, nom_rol, ult_login, estado,id_rol,id_perfil }) => ({
-    id,
-    username: usuario,
-    name: nombres,
-    role: nom_rol,
-    lastLogin: ult_login,
-    estado,
-    id_rol:id_rol,
-    id_perfil:id_perfil
-  }));
+  return data.map(user => ({
+    id: user.id,
+    username: user.username,
+    name: user.name,
+    lastLogin: user.last_login,
+    estado: user.status,
+    // Esta es la parte clave: mapear y unir los nombres de los roles
+    role: user.roles.map(role => role.name).join(', '),
+
+}));
 
 }
+
+
 
 
 

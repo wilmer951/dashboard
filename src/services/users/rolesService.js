@@ -20,6 +20,9 @@ if (!response.ok) throw new Error('Error al obtener los roles');
   const data = await response.json();
  console.log("Respuesta de la API de roles:", data);
 
-    return { data};
+   return data.map(role => ({
+     id_rol: role.id,
+     nombre_rol: role.name
+   }));
 
 }
