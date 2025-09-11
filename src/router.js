@@ -66,7 +66,13 @@ router.beforeEach(async (to, from, next) => {
       }
 
       try {
-    
+        const isTokenValid = await authStore.checkTokenValidity();
+        
+        if (isTokenValid === false) {
+          
+          return next({ name: "login" });
+        }
+
         // 🔐 Si la ruta tiene un guard específico
         if (to.meta.guard && !authStore[to.meta.guard]) {
           return next({ name: "dashboard" }); // o un 403
