@@ -26,8 +26,13 @@ if (!response.ok) throw new Error('Error al obtener los usuarios');
     name: user.name,
     lastLogin: user.last_login,
     estado: user.status,
+    perfil: user.profile_id,
+    perfilNombre: user.profile.name,
     // Esta es la parte clave: mapear y unir los nombres de los roles
-    role: user.roles.map(role => role.name).join(', '),
+    role: user.roles.map(role => role.id).join(', '),
+    rolename: user.roles.map(role => role.name).join(', '),
+    email: user.email
+
 
 }));
 
@@ -47,20 +52,51 @@ if (!response.ok) throw new Error('Error al obtener los usuarios');
 export async function createUser(userData) {
   const token = useAuthStore().jwtToken;
 
-    console.log("servicio datos a crear "+userData)
+   try {
+    const response = await fetch('/api/register', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json", // <-- importante para recibir JSON de Laravel
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
 
-  const response = await fetch(endpoints.base + "users/api_usuarios.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
-    body: JSON.stringify(userData),
-  });
+    if (!response.ok) {
+      // Si es un error de validación (422), Laravel envía un JSON con los errores.
+      if (response.status === 422) {
+        const data = await response.json();
+        // 💡 Añadimos este log para inspeccionar la respuesta completa de Laravel
+        console.log('🔍 Respuesta de validación (422) del backend:', data);
 
-  if (!response.ok) throw new Error("Error al crear usuario");
+        return {
+          status: false,
+        mensaje: 'Los datos enviados no son válidos',
+        errors: data
+        };
+      }
+      // Para otros errores (ej. 500), el cuerpo puede ser HTML. Lo leemos como texto.
+      const errorText = await response.text();
+      console.error('❌ Error del servidor (no JSON):', errorText);
+      throw new Error('Error del servidor. Revisa la consola del navegador para más detalles.');
+    }
 
-  return await response.json();
+    // Si la respuesta es OK (2xx), procesamos el JSON.
+    const data = await response.json();
+    return {
+      status: true,
+      mensaje: 'Usuario creado correctamente',
+      data: data,
+    };
+  } catch (error) {
+        // Error de red, JSON inválido, etc.
+        console.error('❌ Error inesperado al crear usuario:', error);
+        return {
+          status: false,
+          mensaje: 'Error inesperado en la solicitud',
+        };
+      }
 }
 
 

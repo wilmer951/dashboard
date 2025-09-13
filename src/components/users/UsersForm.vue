@@ -72,6 +72,27 @@
       </div>
 
 
+        <div v-if="mode === 'create' || mode === 'edit'" class="relative">
+        <input
+          v-model="form.email"
+          type="email"
+          id="email"
+          class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+          placeholder=" "
+          required
+        />
+        <label
+          for="email"
+          class="absolute top-2 left-4 text-gray-500 text-xs duration-300 transform -translate-y-2 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-2 peer-focus:scale-75 peer-focus:-translate-y-2"
+        >
+          email
+        </label>
+      </div>
+
+
+
+
+
 
     <div v-if="mode === 'create' || mode === 'reset'" class="relative">
       <input
@@ -98,7 +119,7 @@
     </div>
 
 
-      <div v-if="mode === 'create' || mode === 'edit'" class="relative">
+   <div v-if="mode === 'create' || mode === 'edit'" class="relative">
         <select
           v-model.number="form.perfil"
           id="perfil"
@@ -108,18 +129,9 @@
           <option disabled value="" class="text-gray-400">Seleccione perfil</option>
           <option v-for="perfil in perfilStore.perfiles" :key="perfil.id_perfil" :value="perfil.id_perfil">
             {{ perfil.nombre_perfil }}
-    </option>
+          </option>
         </select>
-        <label
-          for="perfil"
-          class="absolute top-2 left-4 text-gray-500 text-xs duration-300 transform -translate-y-2 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-2 peer-focus:scale-75 peer-focus:-translate-y-2"
-        >
-          Perfil
-        </label>
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-gray-700">
-          <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
         </div>
-      </div>
 
       <div v-if="mode === 'create' || mode === 'edit'">
         <label class="block text-sm font-semibold text-gray-700 mb-1">Roles</label>
@@ -215,6 +227,7 @@ const form = reactive({
   rol: [],
   estado: "",
   confirmarContrasena: "",
+  email: "",
 });
 
 /**
@@ -228,6 +241,8 @@ const resetForm = () => {
   form.perfil = "";
   form.rol = [];
   form.estado = ""
+  form.email = "";
+  form.confirmarContrasena = "";
 };
 
 
@@ -242,36 +257,32 @@ watch(
   (newMode) => {
     // Si el modo es 'edit' y hay datos, carga la información del usuario
     if (newMode === "edit" && props.datauser) {
+      console.log(props.datauser);
+      // Llena el formulario con los datos del usuario, excepto la contraseña
       form.id=props.datauser.id;
       form.usuario = props.datauser.username || "";
       form.nombres = props.datauser.name || "";
       form.password = ""; // Se deja vacío por seguridad
-      form.perfil = Number(props.datauser.id_perfil);
+      form.perfil = Number(props.datauser.perfil);
       form.rol = props.datauser.role ? [...props.datauser.role] : [];
       form.estado =  Number(props.datauser.estado);
+      form.email = props.datauser.email || "";
+      form.confirmarContrasena = ""; // Se deja vacío por seguridad
 
     }
     // Si el modo es 'reset' y hay datos, solo prepara el formulario para la contraseña
     else if (newMode === "reset" && props.datauser) {
       // Limpia todos los campos excepto el de usuario para el restablecimiento
-      form.id=props.datauser.id;
+      
       form.usuario = props.datauser.username || "";
-      form.nombres = "";
       form.password = "";
-      form.perfil = "";
-      form.rol = [];
-    form.estado = props.datauser.estado || "";
+   
     }
 
     else if (newMode === "delete" && props.datauser) {
       // Limpia todos los campos excepto el de usuario para el restablecimiento
       form.id=props.datauser.id;
-      form.usuario = props.datauser.username || "";
-      form.nombres = "";
-      form.password = "";
-      form.perfil = "";
-      form.rol = [];
-    form.estado = props.datauser.estado || "";
+
     }
 
 
@@ -299,5 +310,7 @@ const submitForm = () => {
 
 
 const emit = defineEmits(["submit"]);
+
+
 
 </script>

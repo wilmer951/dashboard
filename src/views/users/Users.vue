@@ -121,10 +121,13 @@ const columns = [
   { label: "ID", field: "id", type: "number" },
   { label: "Usuario", field: "username" },
   { label: "Nombre", field: "name" },
-  { label: "Rol", field: "role" },
+  { label: "Rol", field: "rolename" },
+  { label: "Perfil", field: "perfilNombre", sortable: false },
+  { label: "Email", field: "email" },
   { label: "Último Login", field: "lastLogin" },
   { label: "Estado", field: "estado", sortable: false },
   { label: "Acciones", field: "acciones", sortable: false },
+  
 
 ];
 
@@ -150,7 +153,7 @@ function abrirModal(mode, user = null) {
   // El API devuelve los roles como un string separado por comas (id_rol).
   // Lo convertimos a un array de IDs para que el <select multiple> del formulario funcione correctamente.
   if (userForModal && userForModal.id_rol) {
-    userForModal.role = userForModal.id_rol.split(',');
+    userForModal.role = userForModal.id_rol.split(',').map(Number);
   }
    
   modalMode.value = mode
@@ -185,16 +188,26 @@ const handleApiCall = async (apiFunction, data, { successMessage, errorMessage, 
     const response = await apiFunction(data);
     console.log("⬅️ Respuesta del servicio:", response);
 
-    if (response.status !== "ok") {
+    if (response.status !== true) {
+      
       error.value = response.mensaje || errorMessage;
+      
+      error.data  = response.errors ? JSON.stringify(response.errors) : null;
       success.value = null;
 
-      
-        Swal.fire({
-          title: error.value,
-          icon: "error",
-          draggable: true
-        });
+      if (response.errors) {
+        console.log("los errores son ", response.errors);
+        
+      }
+
+      Swal.fire({
+        title: response.mensaje || "Error",
+        icon: "error",
+        text: error.data,
+        draggable: true,
+        allowOutsideClick: false,       // 👈 Solo se cierra con el botón
+        allowEscapeKey: false,
+      });
 
 
       return;
@@ -207,7 +220,11 @@ const handleApiCall = async (apiFunction, data, { successMessage, errorMessage, 
         Swal.fire({
         title: success.value,
         icon: "success",
-        confirmButtonText: "OK",
+        confirmButtonText: "OK", 
+        allowOutsideClick: false,       // 👈 Solo se cierra con el botón
+        allowEscapeKey: false, 
+
+
       }).then((result) => {
         if (result.isConfirmed) {
           
