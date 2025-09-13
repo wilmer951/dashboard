@@ -183,65 +183,102 @@ const cargarUsuarios = async () => {
 };
 
 const handleApiCall = async (apiFunction, data, { successMessage, errorMessage, refresh = true }) => {
+  // `error` y `success` deben estar definidos en el scope padre (ej. ref() en Vue.js)
+  // Asegúrate de que `error` y `success` son variables reactivas (refs)
+  const error = ref(''); // Ejemplo de cómo podrían estar definidos
+
   try {
     console.log(`➡️ Ejecutando ${apiFunction.name} con:`, data);
     const response = await apiFunction(data);
+
     console.log("⬅️ Respuesta del servicio:", response);
 
+    // Si la respuesta no es exitosa (status !== true)
     if (response.status !== true) {
+      // Extraer el título del mensaje, si existe, o usar el errorMessage proporcionado
       
-      error.value = response.mensaje || errorMessage;
-      
-      error.data  = response.errors ? JSON.stringify(response.errors) : null;
-      success.value = null;
 
-      if (response.errors) {
-        console.log("los errores son ", response.errors);
-        
-      }
+      // Extraer los errores detallados de forma segura
+      const detailedErrors = response?.errors?.errors || {};
+      console.log("Errores detallados recibidos:", detailedErrors);
 
+      // Generar la cadena de errores detallados si existen
+      const allErrors = Object.keys(detailedErrors).length > 0
+        ? Object.entries(detailedErrors)
+            .map(([field, messages]) => {
+              // Asegurarse de que 'messages' es un array y tiene al menos un elemento
+              if (Array.isArray(messages) && messages.length > 0) {
+                return `${field}: ${messages[0]}`;
+              }
+              return null; // Ignorar si no hay mensajes válidos
+            })
+            .filter(Boolean) // Eliminar cualquier 'null' si los hubo
+            .join("\n")
+        : '';
+
+      // Asignar el mensaje de error final: errores detallados, mensaje general, o mensaje por defecto
+      // Usamos 'error.value' asumiendo que es una ref de Vue.js
+      error.value = allErrors || response?.mensaje || 'Ocurrió un error inesperado.';
+
+      console.log("Mensaje de error a mostrar:", error.value);
+
+      // Mostrar alerta de SweetAlert2 con el error
       Swal.fire({
-        title: response.mensaje || "Error",
+        title: response.mensaje || errorMessage || "Error",
         icon: "error",
-        text: error.data,
+        text: error.value,
+        confirmButtonText: "OK",
         draggable: true,
-        allowOutsideClick: false,       // 👈 Solo se cierra con el botón
+        allowOutsideClick: false,
         allowEscapeKey: false,
       });
 
-
-      return;
+      return; // Salir de la función si hubo un error
     }
 
-    success.value = response.mensaje || successMessage;
-    error.value = null;
+    // Si la respuesta fue exitosa (status === true)
+    cerrarModal(); // Asumiendo que esta función cierra un modal
 
-
-        Swal.fire({
-        title: success.value,
-        icon: "success",
-        confirmButtonText: "OK", 
-        allowOutsideClick: false,       // 👈 Solo se cierra con el botón
-        allowEscapeKey: false, 
-
-
-      }).then((result) => {
-        if (result.isConfirmed) {
-          
-          cerrarModal();  
-          if (refresh) cargarUsuarios();
-        }
-      });
-
-
-
+    // Mostrar alerta de SweetAlert2 con el éxito
+    Swal.fire({
+      title: response.mensaje || successMessage || "Éxito",
+      icon: "success",
+      confirmButtonText: "OK",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Si se presionó OK y la opción refresh está activa, recargar datos
+        if (refresh) cargarUsuarios(); // Asumiendo que cargarUsuarios es la función a llamar
+      }
+    });
 
   } catch (err) {
-    console.error(`Error en ${apiFunction.name}:`, err);
-    error.value = err.message || 'Ocurrió un error inesperado.';
-    success.value = null;
+    // Manejar errores de red o excepciones inesperadas
+    console.error(`Error inesperado en ${apiFunction.name}:`, err);
+    // Asignar el mensaje de error a error.value
+    error.value = err.message || 'Ocurrió un error inesperado en la comunicación.';
+    // Limpiar cualquier valor de éxito previo si aplica
+    // success.value = null; // Asumiendo que 'success' es también una ref
+
+    // Mostrar alerta de SweetAlert2 para el error de catch
+    Swal.fire({
+      title: errorMessage || "Error de Comunicación",
+      icon: "error",
+      text: error.value,
+      confirmButtonText: "OK",
+      draggable: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
   }
 };
+
+
+
+
+
+
 
   const userActions = {
         create: (data) => handleApiCall(createUser, data, {
