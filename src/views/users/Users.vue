@@ -104,8 +104,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import UserModal from '@/components/users/UserModal.vue';
-import { listUsers, createUser,deleteUser, updateUser } from '@/services/users/userService.js';
-import { resetPassword } from '@/services/users/passwordService';
+import { listUsers, createUser,deleteUser, updateUser,resetPassword } from '@/services/users/userService.js';
 import { useRolesStore } from '@/stores/users/userRolesStore';
 import { usePerfilesStore } from '@/stores/users/userPerfilesStore';
 import Swal from 'sweetalert2';

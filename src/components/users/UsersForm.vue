@@ -283,12 +283,14 @@ watch(
       // Limpia todos los campos excepto el de usuario para el restablecimiento
       
       form.usuario = props.datauser.username || "";
-      form.password = "";
+      form.id = props.datauser.id;
+
    
     }
 
     else if (newMode === "delete" && props.datauser) {
       // Limpia todos los campos excepto el de usuario para el restablecimiento
+      form.usuario = props.datauser.username || "";
       form.id=props.datauser.id;
 
     }

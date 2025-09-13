@@ -12,6 +12,8 @@ export async function isTokenValid(token) {
             'Authorization': `Bearer ${token}`,
           },
         });
+
+        console.log('Token validation response status:', response);
         return response.ok;
       } catch (error) {
         console.error('Error al validar token con el backend:', error);
@@ -44,7 +46,7 @@ export async function login(username, password) {
   const loginData = { username, password };
 
   try {
-    const response = await fetch('/api/login', {
+    const response = await fetch(endpoints.auth.login, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -53,17 +55,22 @@ export async function login(username, password) {
     });
 
     const data = await response.json(); 
-    
-    
-    
+    const token = data.original?.access_token;
 
-    if (response.ok && response.status === 200) {
-      
-      return { success: true, message: 'Inicio de sesión exitoso', data };
+    console.log('Login API response data:', data);
+  
 
-    } else {
-      return { success: false, message: data.mensaje || 'Error al iniciar sesión' };
-    }
+
+      if (!response.ok || !token) {
+
+        return { success: false, message: data.original.message || 'Error al iniciar sesión' };
+    } 
+
+      return {
+          success: true,
+          message: 'Inicio de sesión exitoso',
+          data: data.original // Aquí incluyes el objeto 'original' que contiene token, roles, username
+        };
 
   } catch (err) {
     console.error('Login API call failed:', err);

@@ -6,10 +6,35 @@ console.log("SERVICIO USERS CARGADO ✅");
 
 
 
+// services/userService.js
+function mapUserDataToPayload(userData) {
+  return {
+    id: userData.id,
+    usuario: userData.usuario,
+    nombres: userData.nombres,
+    email: userData.email,
+    perfil: userData.perfil,
+    rol: userData.rol,
+    password: userData.password,
+    confirmar_password: userData.confirmarContrasena,
+    status: userData.estado
+  };
+}
+
+
+
+
+
+
+
+
+
+
+
 export async function listUsers() {
   const token = useAuthStore().jwtToken;
   
-  const response = await fetch('api/users', {
+  const response = await fetch(endpoints.users.list, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -52,15 +77,20 @@ if (!response.ok) throw new Error('Error al obtener los usuarios');
 export async function createUser(userData) {
   const token = useAuthStore().jwtToken;
 
+  const payload = mapUserDataToPayload(userData)
+
+  console.log("servicio datos a crear ",payload)
+
+
    try {
-    const response = await fetch('/api/register', {
+    const response = await fetch(endpoints.users.create, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json", // <-- importante para recibir JSON de Laravel
         "Authorization": `Bearer ${token}`,
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -110,15 +140,22 @@ export async function createUser(userData) {
 export async function updateUser(userData) {
   const token = useAuthStore().jwtToken;
 
-  console.log("servicio datos a actualizar "+userData)
 
-  const response = await fetch(endpoints.base + "users/api_usuarios.php", {
+  console.log("servicio datos a actualizar ",userData)
+
+  const payload = mapUserDataToPayload(userData)
+  
+
+
+
+
+  const response = await fetch(endpoints.users.update(userData.id), {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`,
     },
-    body: JSON.stringify(userData),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) throw new Error("Error al actualizar usuario");
@@ -134,16 +171,44 @@ export async function deleteUser(userData) {
 
   console.log("servicio datos a eliminar "+userData.id)
 
-  const response = await fetch(endpoints.base + "users/api_usuarios.php", {
+  
+
+  const response = await fetch(endpoints.users.delete(userData.id), {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`,
     },
-    body: JSON.stringify(userData),
+    
   });
 
   if (!response.ok) throw new Error("Error al eliminar usuario");
+
+  return await response.json();
+}
+
+
+
+
+
+
+
+export async function resetPassword(userData) {
+  const token = useAuthStore().jwtToken;
+
+    console.log("Servicio resetar password ",userData,"usuario",userData.id)
+   const payload = mapUserDataToPayload(userData)
+
+  const response = await fetch(endpoints.users.resetPassword(userData.id), {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) throw new Error("Error al actualizar usuario");
 
   return await response.json();
 }

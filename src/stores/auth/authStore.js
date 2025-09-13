@@ -24,8 +24,12 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async login(usuario, password) {
       const result = await apiLogin(usuario, password);
+
+      console.log('Login action result sotre:', result.success);
+
+      
     
-      if (result.success) {
+      if (result.success=== true) {
         
         
         console.log('Login successful, processing response...');
@@ -46,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
 
         return { success: true, message: "Login exitoso" };
       }
-    return { success: false, message: result.message || "Usuario o contraseña incorrectos" };
+    return result;
     },
 
 
