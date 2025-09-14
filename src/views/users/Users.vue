@@ -120,7 +120,7 @@ const columns = [
   { label: "ID", field: "id", type: "number" },
   { label: "Usuario", field: "username" },
   { label: "Nombre", field: "name" },
-  { label: "Rol", field: "rolename" },
+  { label: "Rol", field: "roleNames" },
   { label: "Perfil", field: "perfilNombre", sortable: false },
   { label: "Email", field: "email" },
   { label: "Último Login", field: "lastLogin" },
@@ -173,7 +173,16 @@ const cargarUsuarios = async () => {
   try {
     const userList = await listUsers();
     console.log("Usuarios cargados:", userList);
-    users.value = userList;  // ya viene transformado
+
+    if (userList.status=== false) {
+      error.value = userList.mensaje;
+      
+      throw new Error(userList.mensaje);
+      
+    } 
+
+
+    users.value = userList.data;  // ya viene transformado
   } catch (err) {
     error.value = err.message;
   } finally {
@@ -198,22 +207,13 @@ const handleApiCall = async (apiFunction, data, { successMessage, errorMessage, 
       
 
       // Extraer los errores detallados de forma segura
-      const detailedErrors = response?.errors?.errors || {};
+      const detailedErrors = response?.errors || {};
       console.log("Errores detallados recibidos:", detailedErrors);
 
       // Generar la cadena de errores detallados si existen
-      const allErrors = Object.keys(detailedErrors).length > 0
-        ? Object.entries(detailedErrors)
-            .map(([field, messages]) => {
-              // Asegurarse de que 'messages' es un array y tiene al menos un elemento
-              if (Array.isArray(messages) && messages.length > 0) {
-                return `${field}: ${messages[0]}`;
-              }
-              return null; // Ignorar si no hay mensajes válidos
-            })
-            .filter(Boolean) // Eliminar cualquier 'null' si los hubo
-            .join("\n")
-        : '';
+          const allErrors = Object.values(detailedErrors)
+              .flat()
+              .join("\n");
 
       // Asignar el mensaje de error final: errores detallados, mensaje general, o mensaje por defecto
       // Usamos 'error.value' asumiendo que es una ref de Vue.js

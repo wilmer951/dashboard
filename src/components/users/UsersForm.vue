@@ -272,7 +272,7 @@ watch(
       form.nombres = props.datauser.name || "";
       form.password = ""; // Se deja vacío por seguridad
       form.perfil = Number(props.datauser.perfil);
-      form.rol = props.datauser.role ? [...props.datauser.role] : [];
+      form.rol = props.datauser.roleIds ? [...props.datauser.roleIds] : [];
       form.estado =  Number(props.datauser.estado);
       form.email = props.datauser.email || "";
       form.confirmarContrasena = ""; // Se deja vacío por seguridad

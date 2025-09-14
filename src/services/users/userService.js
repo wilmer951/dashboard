@@ -3,10 +3,7 @@ import { useAuthStore } from "@/stores/auth/authStore";
 
 console.log("SERVICIO USERS CARGADO ✅");
 
-
-
-
-// services/userService.js
+// 🔹 Función para mapear datos al formato esperado por el backend
 function mapUserDataToPayload(userData) {
   return {
     id: userData.id,
@@ -17,198 +14,189 @@ function mapUserDataToPayload(userData) {
     rol: userData.rol,
     password: userData.password,
     confirmar_password: userData.confirmarContrasena,
-    status: userData.estado
+    status: userData.estado,
   };
 }
 
-
-
-
-
-
-
-
-
-
-
-export async function listUsers() {
-  const token = useAuthStore().jwtToken;
-  
-  const response = await fetch(endpoints.users.list, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  });
-
-if (!response.ok) throw new Error('Error al obtener los usuarios');
-
-  const data = await response.json();
-
-  return data.map(user => ({
-    id: user.id,
-    username: user.username,
-    name: user.name,
-    lastLogin: user.last_login,
-    estado: user.status,
-    perfil: user.profile_id,
-    perfilNombre: user.profile.name,
-    // Esta es la parte clave: mapear y unir los nombres de los roles
-    role: user.roles.map(role => role.id).join(', '),
-    rolename: user.roles.map(role => role.name).join(', '),
-    email: user.email
-
-
-}));
-
+// 🔹 Helper de respuesta estándar
+function buildResponse(ok, mensaje, data = null, errors = null) {
+  return { status: ok, mensaje, data, errors };
 }
 
-
-
-
-
-
-
-
-
-
-
-
-export async function createUser(userData) {
+/* ======================
+   LISTAR USUARIOS
+====================== */
+export async function listUsers() {
   const token = useAuthStore().jwtToken;
 
-  const payload = mapUserDataToPayload(userData)
+  try {
+    const response = await fetch(endpoints.users.list, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  console.log("servicio datos a crear ",payload)
+    if (!response.ok) {
+      return buildResponse(false, "Error al obtener los usuarios");
+    }
 
+    const data = await response.json();
 
-   try {
+    const mapped = data.map(user => ({
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      lastLogin: user.last_login,
+      estado: user.status,
+      perfil: user.profile_id,
+      perfilNombre: user.profile?.name,
+      roleIds: user.roles.map(role => role.id).join(', '),
+      roleNames:  user.roles.map(role => role.name).join(', '),
+      email: user.email,
+    }));
+
+    return buildResponse(true, "Usuarios obtenidos correctamente", mapped);
+
+  } catch (error) {
+    console.error(error);
+    return buildResponse(false, "Error inesperado en la solicitud", null, error);
+  }
+}
+
+/* ======================
+   CREAR USUARIO
+====================== */
+export async function createUser(userData) {
+  const token = useAuthStore().jwtToken;
+  const payload = mapUserDataToPayload(userData);
+
+  try {
     const response = await fetch(endpoints.users.create, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json", // <-- importante para recibir JSON de Laravel
-        "Authorization": `Bearer ${token}`,
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
-      // Si es un error de validación (422), Laravel envía un JSON con los errores.
-      if (response.status === 422) {
-        const data = await response.json();
-        // 💡 Añadimos este log para inspeccionar la respuesta completa de Laravel
-        console.log('🔍 Respuesta de validación (422) del backend:', data);
-
-        return {
-          status: false,
-        mensaje: 'Los datos enviados no son válidos',
-        errors: data
-        };
-      }
-      // Para otros errores (ej. 500), el cuerpo puede ser HTML. Lo leemos como texto.
-      const errorText = await response.text();
-      console.error('❌ Error del servidor (no JSON):', errorText);
-      throw new Error('Error del servidor. Revisa la consola del navegador para más detalles.');
+    if (response.status === 422) {
+      const data = await response.json();
+      return buildResponse(false, "Los datos enviados no son válidos", null, data.errors || data);
     }
 
-    // Si la respuesta es OK (2xx), procesamos el JSON.
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ Error del servidor:", errorText);
+      return buildResponse(false, "Error en la creación del usuario", null, errorText);
+    }
+
     const data = await response.json();
-    return {
-      status: true,
-      mensaje: 'Usuario creado correctamente',
-      data: data,
-    };
+    return buildResponse(true, "Usuario creado correctamente", data);
+
   } catch (error) {
-        // Error de red, JSON inválido, etc.
-        console.error('❌ Error inesperado al crear usuario:', error);
-        return {
-          status: false,
-          mensaje: 'Error inesperado en la solicitud',
-        };
-      }
+    console.error(error);
+    return buildResponse(false, "Error inesperado en la solicitud", null, error);
+  }
 }
 
-
-
-
-
-
-
-
-
+/* ======================
+   ACTUALIZAR USUARIO
+====================== */
 export async function updateUser(userData) {
   const token = useAuthStore().jwtToken;
+  const payload = mapUserDataToPayload(userData);
 
+  try {
+    const response = await fetch(endpoints.users.update(userData.id), {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
 
-  console.log("servicio datos a actualizar ",userData)
+    if (response.status === 422) {
+      const data = await response.json();
+      return buildResponse(false, "Los datos enviados no son válidos", null, data.errors || data);
+    }
 
-  const payload = mapUserDataToPayload(userData)
-  
+    if (!response.ok) {
+      return buildResponse(false, "Error al actualizar el usuario");
+    }
 
+    const data = await response.json();
+    return buildResponse(true, "Usuario actualizado correctamente", data);
 
-
-
-  const response = await fetch(endpoints.users.update(userData.id), {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) throw new Error("Error al actualizar usuario");
-
-  return await response.json();
+  } catch (error) {
+    console.error(error);
+    return buildResponse(false, "Error inesperado en la solicitud", null, error);
+  }
 }
 
-
-
-
+/* ======================
+   ELIMINAR USUARIO
+====================== */
 export async function deleteUser(userData) {
   const token = useAuthStore().jwtToken;
 
-  console.log("servicio datos a eliminar "+userData.id)
+  try {
+    const response = await fetch(endpoints.users.delete(userData.id), {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  
+    if (!response.ok) {
+      return buildResponse(false, "Error al eliminar usuario");
+    }
 
-  const response = await fetch(endpoints.users.delete(userData.id), {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
-    
-  });
+    const data = await response.json();
+    return buildResponse(true, "Usuario eliminado correctamente", data);
 
-  if (!response.ok) throw new Error("Error al eliminar usuario");
-
-  return await response.json();
+  } catch (error) {
+    console.error(error);
+    return buildResponse(false, "Error inesperado en la solicitud", null, error);
+  }
 }
 
-
-
-
-
-
-
+/* ======================
+   RESET PASSWORD
+====================== */
 export async function resetPassword(userData) {
   const token = useAuthStore().jwtToken;
 
-    console.log("Servicio resetar password ",userData,"usuario",userData.id)
-   const payload = mapUserDataToPayload(userData)
+  const payload = {
+    password: userData.password,
+    confirmar_password: userData.confirmarContrasena,
+  };
 
-  const response = await fetch(endpoints.users.resetPassword(userData.id), {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetch(endpoints.users.resetPassword(userData.id), {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (!response.ok) throw new Error("Error al actualizar usuario");
+    if (response.status === 422) {
+      const data = await response.json();
+      return buildResponse(false, "Los datos enviados no son válidos", null, data.errors || data);
+    }
 
-  return await response.json();
+    if (!response.ok) {
+      return buildResponse(false, "Error al resetear la contraseña");
+    }
+
+    const data = await response.json();
+    return buildResponse(true, "Contraseña actualizada correctamente", data);
+
+  } catch (error) {
+    console.error(error);
+    return buildResponse(false, "Error inesperado en la solicitud", null, error);
+  }
 }
