@@ -36,6 +36,7 @@ export async function listUsers() {
     });
 
     if (!response.ok) {
+          console.log("el estatus es ",response.status);
       return buildResponse(false, "Error al obtener los usuarios");
     }
 
