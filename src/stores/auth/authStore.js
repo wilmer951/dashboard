@@ -13,27 +13,23 @@ export const useAuthStore = defineStore('auth', {
     jwtToken: localStorage.getItem('jwt_token') || null,
     roles: JSON.parse(localStorage.getItem('roles') || "[]"), // siempre array  
     usuario: localStorage.getItem('usuario') || null,
+    modules: JSON.parse(localStorage.getItem('modules') || "[]"),
   }),
   getters: {
     isAuthenticated: (state) => !!state.jwtToken,
-    isAllowed: (state) => state.roles.some(r => ACCESOTOTAL.includes(r)),
-    isAuditor: (state) => state.roles.some(r => AUDITOR.includes(r)),
-    isAudiCalidad: (state) => state.roles.some(r => ADUTORCALIDAD.includes(r)),
+  
+      // Verifica si el usuario puede acceder a un módulo por nombre
+    canAccessModule: (state) => {
+      return (moduleName) => state.modules.includes(moduleName);
+    }
     
   },
   actions: {
     async login(usuario, password) {
       const result = await apiLogin(usuario, password);
 
-      console.log('Login action result sotre:', result.success);
-
-      
-    
       if (result.success=== true) {
         
-        
-        console.log('Login successful, processing response...');
-
 
         this.jwtToken = result.data.access_token;
         
@@ -41,11 +37,13 @@ export const useAuthStore = defineStore('auth', {
         // ⚡ Usar id_rol que viene del backend
        this.roles = result.data.roles ? result.data.roles : [];
         this.usuario = result.data.username;
+        this.modules = result.data.modules;
         
         // Guardar en localStorage
         
         localStorage.setItem('jwt_token', this.jwtToken);
         localStorage.setItem('roles', JSON.stringify(this.roles));
+        localStorage.setItem('modules', JSON.stringify(this.modules));
         localStorage.setItem('usuario', this.usuario);
 
         return { success: true, message: "Login exitoso" };

@@ -1,8 +1,6 @@
 import endpoints from "@/services/api/endpoints";
 import { useAuthStore } from "@/stores/auth/authStore";
 
-console.log("SERVICIO USERS CARGADO ✅");
-
 // 🔹 Función para mapear datos al formato esperado por el backend
 function mapUserDataToPayload(userData) {
   return {
@@ -53,8 +51,9 @@ export async function listUsers() {
       roleIds: user.roles.map(role => role.id).join(', '),
       roleNames:  user.roles.map(role => role.name).join(', '),
       email: user.email,
+      
     }));
-
+ 
     return buildResponse(true, "Usuarios obtenidos correctamente", mapped);
 
   } catch (error) {

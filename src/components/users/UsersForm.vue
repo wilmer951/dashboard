@@ -72,10 +72,29 @@
       </div>
 
 
+        <div v-if="mode === 'create' || mode === 'edit'" class="relative">
+        <input
+          v-model="form.email"
+          type="email"
+          id="email"
+          class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+          placeholder=" "
+          required
+        />
+        <label
+          for="email"
+          class="absolute top-2 left-4 text-gray-500 text-xs duration-300 transform -translate-y-2 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-2 peer-focus:scale-75 peer-focus:-translate-y-2"
+        >
+          email
+        </label>
+      </div>
 
 
 
-   <div v-if="mode === 'create' || mode === 'reset'" class="relative">
+
+
+
+    <div v-if="mode === 'create' || mode === 'reset'" class="relative">
       <input
         v-model="form.confirmarContrasena"
         type="password"
@@ -98,33 +117,6 @@
           Las contraseñas no coinciden
         </p>
     </div>
-
-
-
-
-
-
-
-
-
-        <div v-if="mode === 'create' || mode === 'edit'" class="relative">
-        <input
-          v-model="form.email"
-          type="email"
-          id="email"
-          class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
-          placeholder=" "
-          required
-        />
-        <label
-          for="email"
-          class="absolute top-2 left-4 text-gray-500 text-xs duration-300 transform -translate-y-2 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-2 peer-focus:scale-75 peer-focus:-translate-y-2"
-        >
-          email
-        </label>
-      </div>
-
-
 
 
    <div v-if="mode === 'create' || mode === 'edit'" class="relative">
@@ -265,14 +257,13 @@ watch(
   (newMode) => {
     // Si el modo es 'edit' y hay datos, carga la información del usuario
     if (newMode === "edit" && props.datauser) {
-      console.log(props.datauser);
       // Llena el formulario con los datos del usuario, excepto la contraseña
       form.id=props.datauser.id;
       form.usuario = props.datauser.username || "";
       form.nombres = props.datauser.name || "";
       form.password = ""; // Se deja vacío por seguridad
       form.perfil = Number(props.datauser.perfil);
-      form.rol = props.datauser.roleIds ? [...props.datauser.roleIds] : [];
+      form.rol = props.datauser.role ? [...props.datauser.role] : [];
       form.estado =  Number(props.datauser.estado);
       form.email = props.datauser.email || "";
       form.confirmarContrasena = ""; // Se deja vacío por seguridad
@@ -283,14 +274,12 @@ watch(
       // Limpia todos los campos excepto el de usuario para el restablecimiento
       
       form.usuario = props.datauser.username || "";
-      form.id = props.datauser.id;
-
+      form.password = "";
    
     }
 
     else if (newMode === "delete" && props.datauser) {
       // Limpia todos los campos excepto el de usuario para el restablecimiento
-      form.usuario = props.datauser.username || "";
       form.id=props.datauser.id;
 
     }

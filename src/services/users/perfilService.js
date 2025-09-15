@@ -1,7 +1,5 @@
 import endpoints from "@/services/api/endpoints";
 import { useAuthStore } from "@/stores/auth/authStore";
-console.log("SERVICIO PERFILES CARGADO ✅");
-
 
 export async function listPerfiles() {
   const token = useAuthStore().jwtToken;
@@ -34,4 +32,3 @@ if (!response.ok) {
   
 
      }
-

@@ -172,7 +172,6 @@ const cargarUsuarios = async () => {
   loading.value = true;
   try {
     const userList = await listUsers();
-    console.log("Usuarios cargados:", userList);
 
     if (userList.status=== false) {
       error.value = userList.mensaje;
@@ -196,10 +195,7 @@ const handleApiCall = async (apiFunction, data, { successMessage, errorMessage, 
   const error = ref(''); // Ejemplo de cómo podrían estar definidos
 
   try {
-    console.log(`➡️ Ejecutando ${apiFunction.name} con:`, data);
     const response = await apiFunction(data);
-
-    console.log("⬅️ Respuesta del servicio:", response);
 
     // Si la respuesta no es exitosa (status !== true)
     if (response.status !== true) {
@@ -208,7 +204,6 @@ const handleApiCall = async (apiFunction, data, { successMessage, errorMessage, 
 
       // Extraer los errores detallados de forma segura
       const detailedErrors = response?.errors || {};
-      console.log("Errores detallados recibidos:", detailedErrors);
 
       // Generar la cadena de errores detallados si existen
           const allErrors = Object.values(detailedErrors)
@@ -218,8 +213,6 @@ const handleApiCall = async (apiFunction, data, { successMessage, errorMessage, 
       // Asignar el mensaje de error final: errores detallados, mensaje general, o mensaje por defecto
       // Usamos 'error.value' asumiendo que es una ref de Vue.js
       error.value = allErrors || response?.mensaje || 'Ocurrió un error inesperado.';
-
-      console.log("Mensaje de error a mostrar:", error.value);
 
       // Mostrar alerta de SweetAlert2 con el error
       Swal.fire({
