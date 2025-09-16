@@ -72,29 +72,8 @@
       </div>
 
 
-        <div v-if="mode === 'create' || mode === 'edit'" class="relative">
-        <input
-          v-model="form.email"
-          type="email"
-          id="email"
-          class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
-          placeholder=" "
-          required
-        />
-        <label
-          for="email"
-          class="absolute top-2 left-4 text-gray-500 text-xs duration-300 transform -translate-y-2 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-2 peer-focus:scale-75 peer-focus:-translate-y-2"
-        >
-          email
-        </label>
-      </div>
 
-
-
-
-
-
-    <div v-if="mode === 'create' || mode === 'reset'" class="relative">
+   <div v-if="mode === 'create' || mode === 'reset'" class="relative">
       <input
         v-model="form.confirmarContrasena"
         type="password"
@@ -117,6 +96,33 @@
           Las contraseñas no coinciden
         </p>
     </div>
+
+
+
+
+        <div v-if="mode === 'create' || mode === 'edit'" class="relative">
+        <input
+          v-model="form.email"
+          type="email"
+          id="email"
+          class="block w-full px-4 pt-5 pb-1 rounded-lg border-2 border-gray-300 shadow-sm appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+          placeholder=" "
+          required
+        />
+        <label
+          for="email"
+          class="absolute top-2 left-4 text-gray-500 text-xs duration-300 transform -translate-y-2 scale-75 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-2 peer-focus:scale-75 peer-focus:-translate-y-2"
+        >
+          email
+        </label>
+      </div>
+
+
+
+
+
+
+ 
 
 
    <div v-if="mode === 'create' || mode === 'edit'" class="relative">
