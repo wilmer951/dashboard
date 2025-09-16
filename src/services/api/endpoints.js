@@ -28,8 +28,8 @@ export default {
 
   AuditorView: {
 
-    loginHistory: `${BASE_URL}/        $router->get('/loginHistory', 'Auth\LoginHistoryController@index');
-`,
+    list: `${BASE_URL}/loginHistory`,
+
 
 
 
