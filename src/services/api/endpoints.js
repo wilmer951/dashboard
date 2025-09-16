@@ -12,5 +12,29 @@ export default {
   auth: {
     login: `${BASE_URL}/login`,
     logout: `${BASE_URL}/logout`,
+  },
+
+
+  roles: {
+    list: `${BASE_URL}/roles`,
+   },
+
+  perfiles: {
+    list: `${BASE_URL}/profiles`,
+   },
+
+
+
+
+  AuditorView: {
+
+    loginHistory: `${BASE_URL}/        $router->get('/loginHistory', 'Auth\LoginHistoryController@index');
+`,
+
+
+
   }
+
+
+
 };

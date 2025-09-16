@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores/auth/authStore";
 export async function listPerfiles() {
   const token = useAuthStore().jwtToken;
   
-  const response = await fetch('api/profiles', {
+  const response = await fetch(endpoints.perfiles.list, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`

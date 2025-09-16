@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores/auth/authStore";
 export async function listRoles() {
   const token = useAuthStore().jwtToken;
   
-  const response = await fetch('/api/roles', {
+  const response = await fetch(endpoints.roles.list, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`

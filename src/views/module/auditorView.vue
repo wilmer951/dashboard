@@ -1,6 +1,12 @@
 <template>
 
 <h1>auditor</h1>
+
+
+
+
+
+
 </template>
 
 
