@@ -141,18 +141,16 @@
 
       <div v-if="mode === 'create' || mode === 'edit'">
         <label class="block text-sm font-semibold text-gray-700 mb-1">Roles</label>
-        <select
-          v-model="form.rol"
+    <select
+          v-model.number="form.rol" 
           multiple
           class="mt-1 block w-full rounded-lg border-2 border-gray-300 shadow-sm transition-all duration-200 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm p-3 h-32 focus:outline-none"
           required
-        >
-
+      >
           <option v-for="rol in rolesStore.roles" :key="rol.id_rol" :value="rol.id_rol">
-            {{ rol.nombre_rol }}
-    </option>
-          
-        </select>
+              {{ rol.nombre_rol }}
+          </option>
+      </select>
       </div>
 
 
@@ -261,6 +259,7 @@ const resetForm = () => {
 watch(
   () => props.mode,
   (newMode) => {
+    console.log("datos para editar",props.datauser)
     // Si el modo es 'edit' y hay datos, carga la información del usuario
     if (newMode === "edit" && props.datauser) {
       // Llena el formulario con los datos del usuario, excepto la contraseña
@@ -269,7 +268,11 @@ watch(
       form.nombres = props.datauser.name || "";
       form.password = ""; // Se deja vacío por seguridad
       form.perfil = Number(props.datauser.perfil);
-      form.rol = props.datauser.roleIds ? [...props.datauser.roleIds] : [];
+      form.rol = props.datauser.roleIds
+    ? props.datauser.roleIds.split(',').map(Number)
+    : [];
+
+
       form.estado =  Number(props.datauser.estado);
       form.email = props.datauser.email || "";
       form.confirmarContrasena = ""; // Se deja vacío por seguridad

@@ -3,18 +3,23 @@ import { useAuthStore } from "@/stores/auth/authStore";
 
 // 🔹 Función para mapear datos al formato esperado por el backend
 function mapUserDataToPayload(userData) {
+  // Asegurarte de que rol siempre sea un array 
+  // de números
+
+
   return {
     id: userData.id,
     usuario: userData.usuario,
     nombres: userData.nombres,
     email: userData.email,
-    perfil: userData.perfil,
+    perfil: Number(userData.perfil),
     rol: userData.rol,
     password: userData.password,
     confirmar_password: userData.confirmarContrasena,
-    status: userData.estado,
+    status: Number(userData.estado),
   };
 }
+
 
 // 🔹 Helper de respuesta estándar
 function buildResponse(ok, mensaje, data = null, errors = null) {
@@ -106,6 +111,8 @@ export async function createUser(userData) {
 export async function updateUser(userData) {
   const token = useAuthStore().jwtToken;
   const payload = mapUserDataToPayload(userData);
+
+  console.log("Datos para enviar",payload);
 
   try {
     const response = await fetch(endpoints.users.update(userData.id), {
