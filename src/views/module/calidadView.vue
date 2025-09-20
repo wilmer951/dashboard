@@ -1,12 +1,10 @@
 <template>
 
-<h1>calidad</h1>
+calidad
 </template>
 
+<script setup>
 
-<script>
-export default {
-  name: 'calidad',
-};
+
 </script>
 

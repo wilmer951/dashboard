@@ -28,9 +28,7 @@ export default {
 
   AuditorView: {
 
-    list: `${BASE_URL}/loginHistory`,
-
-
+      list: (page, perPage) => `${BASE_URL}/loginHistory?page=${page}&perPage=${perPage}`,
 
 
   }

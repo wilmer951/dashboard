@@ -8,12 +8,14 @@ function buildResponse(ok, mensaje, data = null, errors = null) {
 }
 
 
-export async function listHistoryLogin(){
+export async function listHistoryLogin(page, perPage){
 
   const token = useAuthStore().jwtToken;
 
+  console.log(page,perPage)
     try {
-      const response = await fetch(endpoints.AuditorView.list, {
+      console.log("entro al servicio ")
+      const response = await fetch(endpoints.AuditorView.list(page,perPage) , {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -25,9 +27,9 @@ export async function listHistoryLogin(){
   
       const data = await response.json();
 
-      console.log("historial de login desde servicio",data);
+      console.log("historial de login desde servicio", data);
   
-      const mapped = data.map(user => ({
+      const mapped = data.data.map(user => ({
         id: user.id,
         username: user.user.username,
         ip_address:user.ip_address,
@@ -35,7 +37,7 @@ export async function listHistoryLogin(){
         user_agent:user.user_agent,
       }));
    
-      return buildResponse(true, "Usuarios obtenidos correctamente", mapped);
+      return buildResponse(true, "Usuarios obtenidos correctamente",{ data: mapped, pagination: data.pagination } );
   
     } catch (error) {
       console.error(error);
@@ -45,4 +47,3 @@ export async function listHistoryLogin(){
 
 
 }
-
