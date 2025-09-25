@@ -28,65 +28,65 @@
       </button>
     </div>
 
-    <!-- Indicadores -->
-    <div v-if="loading" class="p-4 text-blue-600 text-sm">
-      Cargando usuarios...
-    </div>
-    <div v-if="error" class="p-4 text-red-600 text-sm">
-      {{ error }}
-    </div>
 
     <!-- Contenedor de la tabla -->
-    <div
-      v-if="!loading && !error"
-      class="overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800"
-    >
+    
       <div class="overflow-x-auto">
         
-              <vue-good-table
-                    :columns="columns"
-                    :rows="users"
-                    :search-options="{ enabled: true }"
-                    :pagination-options="{ enabled: true, perPage: 5 }"
-                  >
-                
-                <template #table-row="props">
-              
-                      <div v-if="props.column.field === 'estado'" class="flex justify-center">
-                        <span
-                           v-if="props.row.estado == 1"  
-                          class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"
-                        >
-                          Activo
-                        </span>
-                        <span
-                          v-else
-                          class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"
-                        >
-                          Inactivo
-                        </span>
-                      </div>
-
-
-                      <div v-if="props.column.field === 'acciones'" class="flex space-x-2 justify-end">
-
-
-                        <button 
-                        class="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        @click="abrirModal('edit', props.row)">Editar</button>
-                        
-                        <button
-                        class="rounded-md bg-amber-500 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-                        @click="abrirModal('reset', props.row)">Rest. contraseña</button>
-                        
-                        <button 
-                        class="rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-                        @click="abrirModal('delete', props.row)">Eliminar</button>
-                      </div>
-
+            <DataTable
+                :columns="columns"
+                :rows="users"
+                :loading="loading"
+                :error="error"
+                :perPage="5"
+              >
+                <!-- Slot personalizado para columna "estado" -->
+                <template #column-estado="props">
+                  <div class="flex justify-center">
+                    <span
+                      v-if="props.row.estado == 1"
+                      class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800"
+                    >
+                      Activo
+                    </span>
+                    <span
+                      v-else
+                      class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"
+                    >
+                      Inactivo
+                    </span>
+                  </div>
                 </template>
-                </vue-good-table>
-      </div>
+
+                <!-- Slot personalizado para columna "acciones" -->
+                <template #column-acciones="props">
+                  <div class="flex space-x-2 justify-end">
+                    <button 
+                      class="rounded-md bg-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      @click="abrirModal('edit', props.row)"
+                    >
+                      Editar
+                    </button>
+
+                    <button
+                      class="rounded-md bg-amber-500 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                      @click="abrirModal('reset', props.row)"
+                    >
+                      Rest. contraseña
+                    </button>
+
+                    <button 
+                      class="rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                      @click="abrirModal('delete', props.row)"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </template>
+            </DataTable>
+
+
+      
     </div>
   </div>
 
@@ -108,13 +108,28 @@ import { listUsers, createUser,deleteUser, updateUser,resetPassword } from '@/se
 import { useRolesStore } from '@/stores/users/userRolesStore';
 import { usePerfilesStore } from '@/stores/users/userPerfilesStore';
 import Swal from 'sweetalert2';
-
+import DataTable from '@/components/common/DataTable.vue';
 
 
 
 // 1. Store instances
 const rolesStore = useRolesStore();
 const perfilStore = usePerfilesStore();
+
+
+
+// 2. Component State
+const users = ref([]);
+const loading = ref(true);
+const error = ref(null);
+
+
+// Modal State
+const mostrarModal = ref(false);
+const usuarioSeleccionado = ref(null);
+const modalMode = ref("create");
+
+
 
 const columns = [
   { label: "ID", field: "id", type: "number" },
@@ -126,20 +141,9 @@ const columns = [
   { label: "Último Login", field: "lastLogin" },
   { label: "Estado", field: "estado", sortable: false },
   { label: "Acciones", field: "acciones", sortable: false },
-  
+          ];
 
-];
 
-// 2. Component State
-const users = ref([]);
-const loading = ref(true);
-const error = ref(null);
-const success = ref(null);
-
-// Modal State
-const mostrarModal = ref(false);
-const usuarioSeleccionado = ref(null);
-const modalMode = ref("create");
 
 // 3. Functions
 // Modal Handling

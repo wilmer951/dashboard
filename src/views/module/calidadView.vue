@@ -1,10 +1,14 @@
 <template>
 
-calidad
+<SimpleTable :fetchData="listHistoryLogin"
+
+/>
+
+
+
 </template>
 
 <script setup>
-
 
 </script>
 
