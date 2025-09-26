@@ -1,14 +1,21 @@
 <template>
+
+
+
+
   <div>
     <!-- Loading -->
-    <div v-if="loading" class="p-4 text-blue-600 text-sm">Cargando datos...</div>
+    <FullPageLoader :visible="loading" :message="'Cargando, por favor espera...'"/>
+
 
     <!-- Error -->
-    <div v-else-if="error" class="p-4 text-red-600 text-sm">{{ error }}</div>
+    <div v-if="error" class="p-4 text-red-600 text-sm">{{ error }}</div>
 
     <!-- Tabla -->
-    <div v-else class="overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800">
+    <div  class="overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800">
       <div class="overflow-x-auto">
+
+        
         <vue-good-table
           :columns="columns"
           :rows="rows"
@@ -28,11 +35,18 @@
 </template>
 
 <script setup>
+import FullPageLoader from '@/components/common/FullPageLoader.vue';
+import { defineProps } from 'vue';
+
+
+
+
 defineProps({
   columns: Array,
   rows: Array,
   loading: Boolean,
   error: String,
+  message: String,
   search: {
     type: Boolean,
     default: true
@@ -43,7 +57,7 @@ defineProps({
   },
   perPage: {
     type: Number,
-    default: 5
+    default: 10
   }
 })
 </script>

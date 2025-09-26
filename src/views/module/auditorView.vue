@@ -5,7 +5,6 @@
                 :rows="data"
                 :loading="loading"
                 :error="error"
-                :perPage="5"
               >
 
       </DataTable>

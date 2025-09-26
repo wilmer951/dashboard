@@ -32,13 +32,12 @@
     <!-- Contenedor de la tabla -->
     
       <div class="overflow-x-auto">
-        
+         <Transition :duration="550" name="nested"></Transition>
             <DataTable
                 :columns="columns"
                 :rows="users"
                 :loading="loading"
                 :error="error"
-                :perPage="5"
               >
                 <!-- Slot personalizado para columna "estado" -->
                 <template #column-estado="props">
@@ -112,6 +111,7 @@ import DataTable from '@/components/common/DataTable.vue';
 
 
 
+
 // 1. Store instances
 const rolesStore = useRolesStore();
 const perfilStore = usePerfilesStore();
@@ -122,6 +122,7 @@ const perfilStore = usePerfilesStore();
 const users = ref([]);
 const loading = ref(true);
 const error = ref(null);
+const success = ref(null);
 
 
 // Modal State
@@ -309,10 +310,18 @@ const handleUserAction = (payload) => {
 };
 
 onMounted(async () => {
-  await cargarUsuarios()
+
+  try {
+
   await rolesStore.cargarRoles()
   await perfilStore.cargarPerfiles()
-
+  await cargarUsuarios()
+  } catch (err) {
+    console.error('Error en la carga inicial global:', err);
+    // Mostrar alerta global, redireccionar, etc.
+  }finally {
+    loading.value = false;
+  }
 
 
   
