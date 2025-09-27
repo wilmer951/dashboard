@@ -3,6 +3,7 @@
     <DataTable
                 :columns="columns"
                 :rows="data"
+                :entity="'historyLogin'"
                 :loading="loading"
                 :error="error"
               >

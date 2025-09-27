@@ -9,6 +9,7 @@
       <button
         class="mt-4 md:mt-0 flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         @click.prevent="abrirModal('create')"
+
       >
         <svg
           class="h-5 w-5 mr-2"
@@ -32,12 +33,13 @@
     <!-- Contenedor de la tabla -->
     
       <div class="overflow-x-auto">
-         <Transition :duration="550" name="nested"></Transition>
+         
             <DataTable
                 :columns="columns"
                 :rows="users"
                 :loading="loading"
                 :error="error"
+                :entity="'users'"
               >
                 <!-- Slot personalizado para columna "estado" -->
                 <template #column-estado="props">

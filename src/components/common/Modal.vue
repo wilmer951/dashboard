@@ -2,6 +2,7 @@
   <div 
     v-if="visible" 
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+    
   >
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md animate-fade-in">
       <!-- Header -->
@@ -11,6 +12,7 @@
       </div>
 
       <!-- Contenido dinámico -->
+       
       <div class="p-4">
         <slot />
       </div>

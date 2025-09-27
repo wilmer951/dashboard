@@ -16,6 +16,7 @@ export const useRolesStore = defineStore('roles', {
    
       try {
 
+        
           
         const response = await listRoles(); // Llamas al servicio
         this.roles = response;        // Guardas los roles

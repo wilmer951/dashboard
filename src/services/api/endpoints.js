@@ -31,8 +31,14 @@ export default {
       list: `${BASE_URL}/loginHistory`,
 
 
+  },
+
+
+  reports: {
+
+    list: (entity,tipofile) =>`${BASE_URL}/reportes/${entity}/${tipofile}`,
+
+
   }
-
-
 
 };
