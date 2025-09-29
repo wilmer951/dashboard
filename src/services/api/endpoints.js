@@ -36,7 +36,7 @@ export default {
 
   reports: {
 
-    list: (entity,tipofile) =>`${BASE_URL}/reportes/${entity}/${tipofile}`,
+    list: (entity,tipofile,estado,desde,hasta) =>`${BASE_URL}/reportes/${entity}/${tipofile}/?estado=${estado}&desde=${desde}&hasta=${hasta}`,
 
 
   }

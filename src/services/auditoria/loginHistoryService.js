@@ -11,9 +11,7 @@ function buildResponse(ok, mensaje, data = null, errors = null) {
 export async function listHistoryLogin(){
 
   const token = useAuthStore().jwtToken;
-
     try {
-      console.log("entro al servicio ")
       const response = await fetch(endpoints.AuditorView.list, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -21,12 +19,10 @@ export async function listHistoryLogin(){
   
       if (!response.ok) {
             console.log("el estatus es ",response.status);
-        return buildResponse(false, "Error al obtener los usuarios");
+        return buildResponse(false, "Error al obtener el historial de logins");
       }
   
       const data = await response.json();
-
-      console.log("historial de login desde servicio", data);
   
       const mapped = data.map(user => ({
         id: user.id,
@@ -36,7 +32,7 @@ export async function listHistoryLogin(){
         user_agent:user.user_agent,
       }));
    
-      return buildResponse(true, "Usuarios obtenidos correctamente", mapped  );
+      return buildResponse(true, "Historial obtenido correctamente", mapped  );
   
     } catch (error) {
       console.error(error);

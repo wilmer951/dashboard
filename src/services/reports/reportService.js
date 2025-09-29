@@ -19,7 +19,8 @@ function mapFilterData(filterData) {
     tipofile: filterData.tipofile,
     entity: filterData.entity,
     datestar: filterData.datestart,
-    dateend: filterData.dateend
+    dateend: filterData.dateend,
+    estado: filterData.estado,
     
   };
 }
@@ -31,7 +32,7 @@ export async function generatorReport(filterData) {
   const payload = mapFilterData(filterData);
 
   try {
-    const response = await fetch(endpoints.reports.list(payload.entity, payload.tipofile), {
+    const response = await fetch(endpoints.reports.list(payload.entity, payload.tipofile,payload.estado,payload.datestar,payload.dateend), {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -41,7 +42,6 @@ export async function generatorReport(filterData) {
     });
 
     if (!response.ok) {
-      console.log("El estatus es", response.status);
       return buildResponse(false, "Error al obtener el archivo");
     }
 
@@ -76,9 +76,3 @@ export async function generatorReport(filterData) {
     return buildResponse(false, "Error inesperado en la solicitud", null, error);
   }
 }
-
-
-
-
-
-

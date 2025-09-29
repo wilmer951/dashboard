@@ -39,7 +39,7 @@
 
   <div>
     <!-- Loading -->
-    <FullPageLoader :visible="loading" :message="'Cargando, por favor espera...'"/>
+    <FullPageLoader :visible="cargando" :message="'Cargando, por favor espera...'"/>
 
 
     <!-- Error -->
@@ -75,10 +75,12 @@ import FullPageLoader from '@/components/common/FullPageLoader.vue';
 import { defineProps } from 'vue';
 import filterexportTable from '@/components/common/filterexportTable.vue';  
 import { generatorReport } from '@/services/reports/reportService';
+import Swal from 'sweetalert2';
 
 
 const mostrarModal = ref(false);
 
+const cargando=ref(false);
 
 
 
@@ -128,7 +130,6 @@ const entity = ref(props.entity);
 
 
 
-console.log("Props table",entity)
 
 watch(() => props.entity, (newVal) => {
   entity.value = newVal
@@ -137,11 +138,34 @@ watch(() => props.entity, (newVal) => {
 
 
 async  function  handleExport(exportFilterData){
-   console.log("datos a enviar",exportFilterData);
+   cargando.value = true;
+   const response = await generatorReport(exportFilterData);
 
-  const response = await generatorReport(exportFilterData);
+  if (response.status !== true) {
+      cargando.value = false;
+      
+      Swal.fire({
+        title: response.mensaje || "Error",
+        icon: "error",
+        text: response.mensaje,
+        confirmButtonText: "OK",
+          draggable: true,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+      });
 
-  console.log("respuesta en el compoente ",response);
+
+
+
+      error.value = response.mensaje;
+      throw new Error(response.mensaje);
+
+
+  } else {
+   
+     cargando.value = false;
+
+  }
 
 
 

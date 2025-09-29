@@ -39,7 +39,6 @@ export async function listUsers() {
     });
 
     if (!response.ok) {
-          console.log("el estatus es ",response.status);
       return buildResponse(false, "Error al obtener los usuarios");
     }
 
@@ -111,8 +110,6 @@ export async function createUser(userData) {
 export async function updateUser(userData) {
   const token = useAuthStore().jwtToken;
   const payload = mapUserDataToPayload(userData);
-
-  console.log("Datos para enviar",payload);
 
   try {
     const response = await fetch(endpoints.users.update(userData.id), {

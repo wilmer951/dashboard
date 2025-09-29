@@ -95,8 +95,6 @@ const handleLogin = async () => {
 
   loading.value = false;
 
-  console.log('Login result:', result);
-
   if (result.success) {
     router.push('/dashboard');
   } else {

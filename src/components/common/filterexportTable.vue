@@ -31,6 +31,23 @@
         </div>
       </div>
 
+   <div v-if="entity === 'users'">
+      <label for="estado" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Estado</label>
+      <select
+        v-model="estado"
+        name="estado"
+        id="estado"
+        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+      >
+        <option disabled value="">Seleccione una opción</option>
+        <option value="1">Activo</option>
+        <option value="0">Inactivo</option>
+      </select>
+    </div>
+
+
+
+
       <!-- Botones de acción -->
       <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-600">
         <button
@@ -64,6 +81,7 @@ import { useTodayDate } from '@/composable/useTodayDate'
 const { getTodayDate } = useTodayDate()
 
 const emit = defineEmits(['close', 'export'])
+const estado = ref(1)
 
 
 const props = defineProps({
@@ -78,28 +96,19 @@ const props = defineProps({
 
 
 
-
-
-console.log(props.entity);
-
 const datestart = ref(getTodayDate())
 const dateend = ref(getTodayDate())
 
 function exportar(tipo) {
-  // Lógica de exportación
-  console.log(`Exportando ${tipo} desde ${datestart.value} hasta ${dateend.value}`)
-
    emit('export', {
     tipofile: tipo,
     datestart: datestart.value,
     dateend: dateend.value,
-    entity: props.entity
+    entity: props.entity,
+    estado: estado.value
     
   })
   emit('close')
   
 }
 </script>
-
-
-

@@ -206,7 +206,6 @@ const handleApiCall = async (apiFunction, data, { successMessage, errorMessage, 
 
     // Si la respuesta no es exitosa (status !== true)
     if (response.status !== true) {
-      // Extraer el título del mensaje, si existe, o usar el errorMessage proporcionado
       
 
       // Extraer los errores detallados de forma segura

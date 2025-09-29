@@ -44,8 +44,6 @@ const cargarHistoryLogin = async () => { // Acepta la página como argumento
   try {
     // 1. Usa currentPage.value y props.perPage para la llamada
     const response = await listHistoryLogin();
-    console.log("respuesta en el compoente ",response);
-
 
     if (response.status === false) {
       error.value = response.mensaje;
@@ -69,4 +67,3 @@ onMounted(() => {
   cargarHistoryLogin(); // Llama con la página inicial
 });
 </script>
-
