@@ -39,7 +39,7 @@
 
   <div>
     <!-- Loading -->
-    <FullPageLoader :visible="cargando" :message="'Cargando, por favor espera...'"/>
+    <FullPageLoader :visible="loading" :message="'Cargando, por favor espera...'"/>
 
 
     <!-- Error -->
@@ -80,24 +80,18 @@ import Swal from 'sweetalert2';
 
 const mostrarModal = ref(false);
 
-const cargando=ref(false);
+
 
 
 
 function abrirModal(){
-
-mostrarModal.value = true;
-
-
-}
+  mostrarModal.value = true;
+  }
 
 
-function cerrarModal(){
-
-mostrarModal.value = false;
-
-
-}
+  function cerrarModal(){
+  mostrarModal.value = false;
+  }
 
 
 
@@ -137,12 +131,22 @@ watch(() => props.entity, (newVal) => {
 
 
 
+
+const loading = ref(props.loading);
+
+// Opcional: watch para mantener sincronizado con el padre
+watch(() => props.loading, (newVal) => {
+  loading.value = newVal;
+});
+
+
+
 async  function  handleExport(exportFilterData){
-   cargando.value = true;
+   loading.value = true;
    const response = await generatorReport(exportFilterData);
 
   if (response.status !== true) {
-      cargando.value = false;
+      loading.value = false;
       
       Swal.fire({
         title: response.mensaje || "Error",
@@ -163,7 +167,7 @@ async  function  handleExport(exportFilterData){
 
   } else {
    
-     cargando.value = false;
+     loading.value = false;
 
   }
 
