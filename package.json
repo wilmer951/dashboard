@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "firebase": "^12.3.0",
     "lodash.debounce": "^4.0.8",
     "pinia": "^3.0.3",
     "sweetalert2": "^11.23.0",

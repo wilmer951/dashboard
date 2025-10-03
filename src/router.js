@@ -8,13 +8,14 @@ import Users from "./views/users/Users.vue";
 import home from "./views/homeView.vue";
 import calidad from "./views/module/calidadview.vue";
 import auditoria from "./views/module/auditorView.vue";
-import { usePermissions } from "./composable/usePermissions";
+import { usePermissions } from "@/composable/usePermissions";
+import { useLicenseStore } from '@/stores/licenses/licenceStore';
 
 
 
 
 
-import { useAuthStore } from './stores/auth/authStore';
+import { useAuthStore } from '@/stores/auth/authStore';
 
 
 
@@ -49,13 +50,35 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/dashboard/'),
   routes
 });
 
 
 
 router.beforeEach(async (to, from, next) => {
+
+
+
+ const licenseStore = useLicenseStore();
+
+  // 2. Acceder al estado y/o llamar a las acciones
+  
+   await licenseStore.validarLicencia();
+  
+  const statusLicence = licenseStore.licenseStatus;
+
+  if (statusLicence !== "active") {
+    alert('Licencia no valida');
+   console.log("licencia no valida")
+    return next(false);
+  
+  }
+
+
+  
+
+
   const authStore = useAuthStore();
   const { canAccessModule } = usePermissions(); // 👈 importamos desde el composable
 

@@ -5,7 +5,7 @@ export async function isTokenValid(token) {
   
 
       try {
-        const response = await fetch('/api/check-token', {
+        const response = await fetch(endpoints.auth.check_token, {
           
           method: 'GET',
           headers: {

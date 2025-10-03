@@ -1,4 +1,6 @@
-const BASE_URL = "/api";
+/*const BASE_URL = "/api"; */
+const BASE_URL = "http://localhost:8000";
+
 
 export default {
   users: {
@@ -12,6 +14,7 @@ export default {
   auth: {
     login: `${BASE_URL}/login`,
     logout: `${BASE_URL}/logout`,
+    check_token: `${BASE_URL}/check-token`,
   },
 
 

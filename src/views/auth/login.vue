@@ -66,12 +66,15 @@
       </form>
     </div>
   </div>
+
+
+
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../../stores/auth/authStore'; 
+import { useAuthStore } from '@/stores/auth/authStore'; 
 import FullPageLoader from '@/components/common/FullPageLoader.vue';
 
 
